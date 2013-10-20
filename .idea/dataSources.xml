@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" hash="1973027781">
+    <data-source source="LOCAL" name="Data Source" product="MySQL" version="5.5.32-0ubuntu0.13.04.1" jdbc-version="3.0" driver-name="MySQL-AB JDBC Driver" driver-version="mysql-connector-java-5.1.6 ( Revision: ${svn.Revision} )" uuid="fab27b11-6891-449e-aff2-1b7bef38bcf1">
+      <extra-name-characters>#@</extra-name-characters>
+      <identifier-quote-string>`</identifier-quote-string>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://localhost:3306/hibnatedb</jdbc-url>
+      <user-name>root</user-name>
+      <schema-pattern>hibnatedb.*</schema-pattern>
+      <libraries>
+        <library>
+          <url>file://$PROJECT_DIR$/target/moneyStream-0.0.1-SNAPSHOT/WEB-INF/lib/mysql-connector-java-5.1.6.jar</url>
+        </library>
+      </libraries>
+    </data-source>
+  </component>
+</project>
+

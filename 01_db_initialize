@@ -1,0 +1,137 @@
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
+
+DROP SCHEMA IF EXISTS `hibnatedb` ;
+CREATE SCHEMA IF NOT EXISTS `hibnatedb` DEFAULT CHARACTER SET utf8 ;
+USE `hibnatedb` ;
+
+-- -----------------------------------------------------
+-- Table `hibnatedb`.`Account`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `hibnatedb`.`Account` ;
+
+CREATE  TABLE IF NOT EXISTS `hibnatedb`.`Account` (
+  `id` INT NOT NULL AUTO_INCREMENT ,
+  `email` VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NULL ,
+  `password` VARCHAR(255) NULL ,
+  `status` VARCHAR(45) NULL ,
+  PRIMARY KEY (`id`) )
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_general_ci
+COMMENT = 'table for users';
+
+CREATE UNIQUE INDEX `email_UNIQUE` ON `hibnatedb`.`Account` (`email` ASC) ;
+
+
+-- -----------------------------------------------------
+-- Table `hibnatedb`.`Wallet`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `hibnatedb`.`Wallet` ;
+
+CREATE  TABLE IF NOT EXISTS `hibnatedb`.`Wallet` (
+  `id` INT NOT NULL AUTO_INCREMENT ,
+  `walletType` VARCHAR(255) NULL ,
+  `waletNumber` VARCHAR(255) NULL ,
+  `owner` INT NOT NULL ,
+  PRIMARY KEY (`id`, `owner`) ,
+  CONSTRAINT `fk_wallets_users`
+    FOREIGN KEY (`owner` )
+    REFERENCES `hibnatedb`.`Account` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_general_ci;
+
+CREATE UNIQUE INDEX `waletNumber_UNIQUE` ON `hibnatedb`.`Wallet` (`waletNumber` ASC) ;
+
+CREATE INDEX `fk_wallet_account` ON `hibnatedb`.`Wallet` (`owner` ASC) ;
+
+
+-- -----------------------------------------------------
+-- Table `hibnatedb`.`Queue`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `hibnatedb`.`Queue` ;
+
+CREATE  TABLE IF NOT EXISTS `hibnatedb`.`Queue` (
+  `id` INT NOT NULL AUTO_INCREMENT ,
+  `position` INT(11) NULL ,
+  `queueType` VARCHAR(45) NULL ,
+  PRIMARY KEY (`id`) )
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_general_ci;
+
+CREATE UNIQUE INDEX `POSITION_IDX` ON `hibnatedb`.`Queue` (`queueType` ASC, `position` ASC) ;
+
+
+-- -----------------------------------------------------
+-- Table `hibnatedb`.`Queue_has_Account`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `hibnatedb`.`Queue_has_Account` ;
+
+CREATE  TABLE IF NOT EXISTS `hibnatedb`.`Queue_has_Account` (
+  `queue_id` INT NOT NULL ,
+  `accounts_id` INT NOT NULL ,
+  PRIMARY KEY (`queue_id`, `accounts_id`) ,
+  CONSTRAINT `fk_queue_has_accounts_queue1`
+    FOREIGN KEY (`queue_id` )
+    REFERENCES `hibnatedb`.`Queue` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_queue_has_accounts_accounts1`
+    FOREIGN KEY (`accounts_id` )
+    REFERENCES `hibnatedb`.`Account` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_general_ci;
+
+CREATE INDEX `fk_queue_has_account_account1` ON `hibnatedb`.`Queue_has_Account` (`accounts_id` ASC) ;
+
+CREATE INDEX `fk_queue_has_account_queue1` ON `hibnatedb`.`Queue_has_Account` (`queue_id` ASC) ;
+
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+-- -----------------------------------------------------
+-- Data for table `hibnatedb`.`Account`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `hibnatedb`;
+INSERT INTO `hibnatedb`.`Account` (`id`, `email`, `password`, `status`) VALUES (1, 'slava@mail.ru', '555666', 'active');
+
+COMMIT;
+
+-- -----------------------------------------------------
+-- Data for table `hibnatedb`.`Wallet`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `hibnatedb`;
+INSERT INTO `hibnatedb`.`Wallet` (`id`, `walletType`, `waletNumber`, `owner`) VALUES (1, 'qiwi', '12345678', 1);
+
+COMMIT;
+
+-- -----------------------------------------------------
+-- Data for table `hibnatedb`.`Queue`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `hibnatedb`;
+INSERT INTO `hibnatedb`.`Queue` (`id`, `position`, `queueType`) VALUES (1, 1, '1');
+
+COMMIT;
+
+-- -----------------------------------------------------
+-- Data for table `hibnatedb`.`Queue_has_Account`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `hibnatedb`;
+INSERT INTO `hibnatedb`.`Queue_has_Account` (`queue_id`, `accounts_id`) VALUES (1, 1);
+
+COMMIT;
