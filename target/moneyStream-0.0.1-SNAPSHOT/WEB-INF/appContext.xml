@@ -16,32 +16,30 @@
 	<context:property-placeholder location="classpath:database.config" />
 	<context:component-scan base-package="com.piramida" />
 
-	<bean id="sessionFactory" 
-    class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
-      <property name="dataSource" ref="dataSource" />
-      <property name="packagesToScan" value="org.baeldung.spring.persistence.model" />
-      <property name="hibernateProperties">
-         <props>
-            <prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
-            <prop key="hibernate.dialect">${hibernate.dialect}</prop>
-         </props>
-      </property>
-   </bean>
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="packagesToScan" value="com.piramida.entity" />
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
+				<prop key="hibernate.dialect">${hibernate.dialect}</prop>
+			</props>
+		</property>
+	</bean>
 
-   <bean id="dataSource" 
-    class="org.apache.tomcat.dbcp.dbcp.BasicDataSource">
-      <property name="driverClassName" value="${db.driver}" />
-      <property name="url" value="${db.url}" />
-      <property name="username" value="${db.username}" />
-      <property name="password" value="${db.password}" />
-   </bean>
+	<bean id="dataSource" class="org.apache.tomcat.dbcp.dbcp.BasicDataSource">
+		<property name="driverClassName" value="${db.driver}" />
+		<property name="url" value="${db.url}" />
+		<property name="username" value="${db.username}" />
+		<property name="password" value="${db.password}" />
+	</bean>
 
-   <bean id="txManager" 
-    class="org.springframework.orm.hibernate4.HibernateTransactionManager">
-      <property name="sessionFactory" ref="sessionFactory" />
-   </bean>
+	<bean id="txManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
 
-   <bean id="persistenceExceptionTranslationPostProcessor" 
-    class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
+	<bean id="persistenceExceptionTranslationPostProcessor" class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" />
+
+<bean name="AccountDao" class="com.piramida.dao.account.impl.DefaultAccountDao"/>
 
 </beans>

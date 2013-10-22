@@ -16,13 +16,12 @@ CREATE  TABLE IF NOT EXISTS `hibnatedb`.`Account` (
   `email` VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NULL ,
   `password` VARCHAR(255) NULL ,
   `status` VARCHAR(45) NULL ,
-  PRIMARY KEY (`id`) )
+  PRIMARY KEY (`id`) ,
+  UNIQUE INDEX `email_UNIQUE` (`email` ASC) )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci
 COMMENT = 'table for users';
-
-CREATE UNIQUE INDEX `email_UNIQUE` ON `hibnatedb`.`Account` (`email` ASC) ;
 
 
 -- -----------------------------------------------------
@@ -36,18 +35,16 @@ CREATE  TABLE IF NOT EXISTS `hibnatedb`.`Wallet` (
   `waletNumber` VARCHAR(255) NULL ,
   `owner` INT NOT NULL ,
   PRIMARY KEY (`id`, `owner`) ,
+  UNIQUE INDEX `waletNumber_UNIQUE` (`waletNumber` ASC) ,
+  INDEX `fk_wallet_account` (`owner` ASC) ,
   CONSTRAINT `fk_wallets_users`
     FOREIGN KEY (`owner` )
     REFERENCES `hibnatedb`.`Account` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
-
-CREATE UNIQUE INDEX `waletNumber_UNIQUE` ON `hibnatedb`.`Wallet` (`waletNumber` ASC) ;
-
-CREATE INDEX `fk_wallet_account` ON `hibnatedb`.`Wallet` (`owner` ASC) ;
 
 
 -- -----------------------------------------------------
@@ -59,40 +56,40 @@ CREATE  TABLE IF NOT EXISTS `hibnatedb`.`Queue` (
   `id` INT NOT NULL AUTO_INCREMENT ,
   `position` INT(11) NULL ,
   `queueType` VARCHAR(45) NULL ,
-  PRIMARY KEY (`id`) )
+  `Account_id` INT NOT NULL ,
+  `status` VARCHAR(45) NULL ,
+  PRIMARY KEY (`id`, `Account_id`) ,
+  UNIQUE INDEX `POSITION_IDX` (`queueType` ASC, `position` ASC) ,
+  INDEX `fk_Queue_Account1` (`Account_id` ASC) ,
+  CONSTRAINT `fk_Queue_Account1`
+    FOREIGN KEY (`Account_id` )
+    REFERENCES `hibnatedb`.`Account` (`id` )
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
 
-CREATE UNIQUE INDEX `POSITION_IDX` ON `hibnatedb`.`Queue` (`queueType` ASC, `position` ASC) ;
-
 
 -- -----------------------------------------------------
--- Table `hibnatedb`.`Queue_has_Account`
+-- Table `hibnatedb`.`PendingQueue`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `hibnatedb`.`Queue_has_Account` ;
+DROP TABLE IF EXISTS `hibnatedb`.`PendingQueue` ;
 
-CREATE  TABLE IF NOT EXISTS `hibnatedb`.`Queue_has_Account` (
-  `queue_id` INT NOT NULL ,
-  `accounts_id` INT NOT NULL ,
-  PRIMARY KEY (`queue_id`, `accounts_id`) ,
-  CONSTRAINT `fk_queue_has_accounts_queue1`
-    FOREIGN KEY (`queue_id` )
-    REFERENCES `hibnatedb`.`Queue` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_queue_has_accounts_accounts1`
-    FOREIGN KEY (`accounts_id` )
-    REFERENCES `hibnatedb`.`Account` (`id` )
+CREATE  TABLE IF NOT EXISTS `hibnatedb`.`PendingQueue` (
+  `id` INT NOT NULL AUTO_INCREMENT ,
+  `Queue_id` INT NOT NULL ,
+  `Queue_Account_id` INT NOT NULL ,
+  PRIMARY KEY (`id`, `Queue_id`, `Queue_Account_id`) ,
+  INDEX `fk_Pending_queue_Queue1` (`Queue_id` ASC, `Queue_Account_id` ASC) ,
+  CONSTRAINT `fk_Pending_queue_Queue1`
+    FOREIGN KEY (`Queue_id` , `Queue_Account_id` )
+    REFERENCES `hibnatedb`.`Queue` (`id` , `Account_id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
-
-CREATE INDEX `fk_queue_has_account_account1` ON `hibnatedb`.`Queue_has_Account` (`accounts_id` ASC) ;
-
-CREATE INDEX `fk_queue_has_account_queue1` ON `hibnatedb`.`Queue_has_Account` (`queue_id` ASC) ;
 
 
 
@@ -123,15 +120,6 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `hibnatedb`;
-INSERT INTO `hibnatedb`.`Queue` (`id`, `position`, `queueType`) VALUES (1, 1, '1');
-
-COMMIT;
-
--- -----------------------------------------------------
--- Data for table `hibnatedb`.`Queue_has_Account`
--- -----------------------------------------------------
-START TRANSACTION;
-USE `hibnatedb`;
-INSERT INTO `hibnatedb`.`Queue_has_Account` (`queue_id`, `accounts_id`) VALUES (1, 1);
+INSERT INTO `hibnatedb`.`Queue` (`id`, `position`, `queueType`, `Account_id`, `status`) VALUES (1, 1, '1', 1, 'new');
 
 COMMIT;
