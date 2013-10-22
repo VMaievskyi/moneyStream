@@ -16,11 +16,15 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 @Table(name = "Account", schema = "", catalog = "hibnatedb")
 @Entity
 public class Account {
     private Integer id;
+    @NotEmpty
     private String email;
+    @NotEmpty
     private String password;
     private ActivationStatus status;
     private String activationString;

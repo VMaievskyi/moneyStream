@@ -32,6 +32,10 @@ public class DefaultAccountService implements AccountService {
 	}
     }
 
+    public Account findByEmail(final String email) {
+	return accountDao.findByEmail(email);
+    }
+
     public AccountDao getAccountDao() {
 	return accountDao;
     }

@@ -9,4 +9,6 @@ public interface AccountService {
     void activateUserAccount(String userActivationString);
 
     void deactivateAccount(Account account);
+
+    Account findByEmail(String email);
 }
