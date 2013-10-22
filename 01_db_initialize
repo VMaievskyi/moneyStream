@@ -15,7 +15,7 @@ CREATE  TABLE IF NOT EXISTS `hibnatedb`.`Account` (
   `id` INT NOT NULL AUTO_INCREMENT ,
   `email` VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NULL ,
   `password` VARCHAR(255) NULL ,
-  `status` VARCHAR(45) NULL ,
+  `status` VARCHAR(50) NULL ,
   `activationString` VARCHAR(75) NULL ,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `email_UNIQUE` (`email` ASC) )
@@ -59,6 +59,8 @@ CREATE  TABLE IF NOT EXISTS `hibnatedb`.`Queue` (
   `queueType` VARCHAR(45) NULL ,
   `Account_id` INT NOT NULL ,
   `status` VARCHAR(45) NULL ,
+  `paymentCount` INT NULL ,
+  `requiredPaymentCount` INT NULL ,
   PRIMARY KEY (`id`, `Account_id`) ,
   INDEX `fk_Queue_Account1` (`Account_id` ASC) ,
   UNIQUE INDEX `positionIDX` (`position` ASC, `queueType` ASC) ,
@@ -121,6 +123,6 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `hibnatedb`;
-INSERT INTO `hibnatedb`.`Queue` (`id`, `position`, `queueType`, `Account_id`, `status`) VALUES (1, 1, '1', 1, 'new');
+INSERT INTO `hibnatedb`.`Queue` (`id`, `position`, `queueType`, `Account_id`, `status`, `paymentCount`, `requiredPaymentCount`) VALUES (1, 1, '1', 1, 'new', NULL, NULL);
 
 COMMIT;

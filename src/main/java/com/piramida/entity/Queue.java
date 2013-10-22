@@ -17,6 +17,8 @@ public class Queue {
     private Integer position;
     private String status;
     private Account account;
+    private Integer paymentCount;
+    private Integer requiredPaymentCount;
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -67,6 +69,26 @@ public class Queue {
 
     public void setStatus(final String status) {
 	this.status = status;
+    }
+
+    @Column(name = "paymentCount")
+    @Basic
+    public Integer getPaymentCount() {
+	return paymentCount;
+    }
+
+    public void setPaymentCount(final Integer paymentCount) {
+	this.paymentCount = paymentCount;
+    }
+
+    @Column(name = "requiredPaymentCount")
+    @Basic
+    public Integer getRequiredPaymentCount() {
+	return requiredPaymentCount;
+    }
+
+    public void setRequiredPaymentCount(final Integer requiredPaymentCount) {
+	this.requiredPaymentCount = requiredPaymentCount;
     }
 
 }

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.piramida.controller.exception.AccountOperationException;
 import com.piramida.dao.account.AccountDao;
 import com.piramida.service.security.impl.SecurityStringGeneratorService;
 
@@ -21,9 +22,7 @@ public class AccountControllerTest {
     private AccountController testInstance;
 
     @Test
-    public void shouldActivateAccount() {
-	testInstance
-		.activateAccount("$2a$10$HSSw221wwrcWKK1WhliIIuasrSDNnKqjfZH4vTLviH2koi0hnQaTq");
+    public void shouldActivateAccount() throws AccountOperationException {
 
     }
 
