@@ -4,7 +4,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.piramida.security.impl.PasswordGeneratorService;
+import com.piramida.service.security.impl.PasswordGeneratorService;
 
 public class PasswordGeneratorServiceTest {
 

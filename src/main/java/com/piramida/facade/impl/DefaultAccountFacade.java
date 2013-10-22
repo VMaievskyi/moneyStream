@@ -6,17 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.piramida.entity.Account;
 import com.piramida.entity.EmailType;
 import com.piramida.facade.AccountFacade;
-import com.piramida.service.MailService;
 import com.piramida.service.account.AccountService;
+import com.piramida.service.mail.MailService;
 import com.piramida.service.security.HashGeneratorService;
 
 public class DefaultAccountFacade implements AccountFacade {
 
     @Autowired
     private AccountService accountService;
-    @Autowired
     private HashGeneratorService hashGeneratorService;
-    @Autowired
     private MailService mailService;
 
     public void activateAccount(final String string) {
@@ -39,7 +37,14 @@ public class DefaultAccountFacade implements AccountFacade {
     public void deactivateAccount(final Account account) {
 	Validate.notNull(account, "account cannot be null while unactivation");
 	accountService.deactivateAccount(account);
+    }
 
+    public void updateAccount(final Account account) {
+	Validate.notNull(account, "account cannot be null while update");
+	Validate.notNull(account.getEmail(), "email field is mandatory");
+	if (accountService.findByEmail(account.getEmail()) != null) {
+	    accountService.updateUserAccount(account);
+	}
     }
 
     private void createValidetedAccount(final Account account) {

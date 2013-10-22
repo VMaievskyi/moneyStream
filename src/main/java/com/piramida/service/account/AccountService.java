@@ -10,5 +10,7 @@ public interface AccountService {
 
     void deactivateAccount(Account account);
 
+    void updateUserAccount(final Account account);
+
     Account findByEmail(String email);
 }

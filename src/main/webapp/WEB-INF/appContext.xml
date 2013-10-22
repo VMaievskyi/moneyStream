@@ -15,10 +15,10 @@
 
 	<context:property-placeholder location="classpath:database.config" />
 	<context:component-scan base-package="com.piramida" />
-	<tx:annotation-driven transaction-manager="txManager"/>
-	
-	
-	
+	<tx:annotation-driven transaction-manager="txManager" />
+
+
+
 	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
 		<property name="packagesToScan" value="com.piramida.entity" />
@@ -44,18 +44,21 @@
 
 	<bean id="persistenceExceptionTranslationPostProcessor" class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" />
 
-<bean name="abstractDao" class="com.piramida.dao.AbstractGenegicDao" abstract="true" />
-<bean name="accountDao" class="com.piramida.dao.account.impl.DefaultAccountDao" parent="abstractDao"/>
-<bean name="queueDao" class="com.piramida.dao.queue.impl.DefaultQueueDao" parent="abstractDao"/>
-<bean name="pendingQueueDao" class="com.piramida.dao.pendingqueue.impl.DefaultPendingQueueDao" parent="abstractDao"/>
+	<bean name="abstractDao" class="com.piramida.dao.AbstractGenegicDao" abstract="true" />
+	<bean name="accountDao" class="com.piramida.dao.account.impl.DefaultAccountDao" parent="abstractDao" />
+	<bean name="queueDao" class="com.piramida.dao.queue.impl.DefaultQueueDao" parent="abstractDao" />
+	<bean name="pendingQueueDao" class="com.piramida.dao.pendingqueue.impl.DefaultPendingQueueDao" parent="abstractDao" />
 
-<bean name="accountService" class="com.piramida.service.account.impl.DefaultAccountService"/>
-<bean name="securityStringGenerator" class="com.piramida.security.impl.SecurityStringGeneratorService" />
-<bean name="passwordGeneratorService" class="com.piramida.security.impl.PasswordGeneratorService" />
+	<bean name="accountService" class="com.piramida.service.account.impl.DefaultAccountService" />
+	<bean name="securityStringGenerator" class="com.piramida.service.security.impl.SecurityStringGeneratorService" />
+	<bean name="passwordGeneratorService" class="com.piramida.service.security.impl.PasswordGeneratorService" />
+	<bean name="mailService" class="com.piramida.service.mail.impl.DefaultMailService" />
 
-<bean name="accountFacade" class="com.piramida.facade.impl.DefaultAccountFacade" >
-	<property name="hashGeneratorService" ref="securityStringGenerator"/>
-</bean>
+	<bean name="accountFacade" class="com.piramida.facade.impl.DefaultAccountFacade">
+		<property name="accountService" ref="accountService" />
+		<property name="hashGeneratorService" ref="securityStringGenerator" />
+		<property name="mailService" ref="mailService" />
+	</bean>
 
 
 </beans> 

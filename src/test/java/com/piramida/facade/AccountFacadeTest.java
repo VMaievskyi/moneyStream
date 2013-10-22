@@ -12,8 +12,8 @@ import org.mockito.MockitoAnnotations;
 import com.piramida.entity.Account;
 import com.piramida.entity.EmailType;
 import com.piramida.facade.impl.DefaultAccountFacade;
-import com.piramida.service.MailService;
 import com.piramida.service.account.AccountService;
+import com.piramida.service.mail.MailService;
 import com.piramida.service.security.HashGeneratorService;
 
 public class AccountFacadeTest {

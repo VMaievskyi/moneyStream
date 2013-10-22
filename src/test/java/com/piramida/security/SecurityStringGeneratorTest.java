@@ -4,7 +4,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.piramida.security.impl.SecurityStringGeneratorService;
+import com.piramida.service.security.impl.SecurityStringGeneratorService;
 
 public class SecurityStringGeneratorTest {
     private static final String CORECT_BASE_KEY = "corectBaseKey";

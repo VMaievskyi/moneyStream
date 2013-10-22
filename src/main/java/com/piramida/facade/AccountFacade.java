@@ -7,4 +7,7 @@ public interface AccountFacade {
     void activateAccount(String string);
 
     void createAccount(Account account);
+
+    void updateAccount(Account account);
+
 }
