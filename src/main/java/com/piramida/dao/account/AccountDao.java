@@ -7,4 +7,6 @@ public interface AccountDao extends GenericDao<Account> {
 
     Account findByEmail(String email);
 
+    Account findByActivationString(String activationString);
+
 }

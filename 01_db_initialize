@@ -16,6 +16,7 @@ CREATE  TABLE IF NOT EXISTS `hibnatedb`.`Account` (
   `email` VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NULL ,
   `password` VARCHAR(255) NULL ,
   `status` VARCHAR(45) NULL ,
+  `activationString` VARCHAR(75) NULL ,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `email_UNIQUE` (`email` ASC) )
 ENGINE = InnoDB
@@ -59,8 +60,8 @@ CREATE  TABLE IF NOT EXISTS `hibnatedb`.`Queue` (
   `Account_id` INT NOT NULL ,
   `status` VARCHAR(45) NULL ,
   PRIMARY KEY (`id`, `Account_id`) ,
-  UNIQUE INDEX `POSITION_IDX` (`queueType` ASC, `position` ASC) ,
   INDEX `fk_Queue_Account1` (`Account_id` ASC) ,
+  UNIQUE INDEX `positionIDX` (`position` ASC, `queueType` ASC) ,
   CONSTRAINT `fk_Queue_Account1`
     FOREIGN KEY (`Account_id` )
     REFERENCES `hibnatedb`.`Account` (`id` )
@@ -102,7 +103,7 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `hibnatedb`;
-INSERT INTO `hibnatedb`.`Account` (`id`, `email`, `password`, `status`) VALUES (1, 'slava@mail.ru', '555666', 'active');
+INSERT INTO `hibnatedb`.`Account` (`id`, `email`, `password`, `status`, `activationString`) VALUES (1, 'slava@mail.ru', '555666', 'active', NULL);
 
 COMMIT;
 

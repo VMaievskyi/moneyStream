@@ -20,4 +20,11 @@ public class DefaultAccountDao extends AbstractGenegicDao<Account> implements
 	return "Account";
     }
 
+    public Account findByActivationString(final String activationString) {
+	final Session currentSession = getSessionFactory().getCurrentSession();
+	return (Account) currentSession.createQuery(
+		"from Account where activationString=" + activationString)
+		.uniqueResult();
+    }
+
 }

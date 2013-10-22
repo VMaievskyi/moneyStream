@@ -45,4 +45,5 @@
 <bean name="abstractDao" class="com.piramida.dao.AbstractGenegicDao" abstract="true" />
 <bean name="accountDao" class="com.piramida.dao.account.impl.DefaultAccountDao" parent="abstractDao"/>
 <bean name="queueDao" class="com.piramida.dao.queue.impl.DefaultQueueDao" parent="abstractDao"/>
+<bean name="pendingQueueDao" class="com.piramida.dao.pendingqueue.impl.DefaultPendingQueueDao" parent="abstractDao"/>
 </beans>

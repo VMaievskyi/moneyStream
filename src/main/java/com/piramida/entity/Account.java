@@ -7,6 +7,8 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -20,7 +22,8 @@ public class Account {
     private Integer id;
     private String email;
     private String password;
-    private String status;
+    private ActivationStatus status;
+    private String activationString;
     private Set<Queue> queues = new HashSet<Queue>();
     private Set<Wallet> wallets = new HashSet<Wallet>();
 
@@ -56,12 +59,12 @@ public class Account {
     }
 
     @Column(name = "status")
-    @Basic
-    public String getStatus() {
+    @Enumerated(EnumType.STRING)
+    public ActivationStatus getStatus() {
 	return status;
     }
 
-    public void setStatus(final String status) {
+    public void setStatus(final ActivationStatus status) {
 	this.status = status;
     }
 
@@ -81,6 +84,14 @@ public class Account {
 
     public void setWallets(final Set<Wallet> wallets) {
 	this.wallets = wallets;
+    }
+
+    public String getActivationString() {
+	return activationString;
+    }
+
+    public void setActivationString(final String activationString) {
+	this.activationString = activationString;
     }
 
 }
