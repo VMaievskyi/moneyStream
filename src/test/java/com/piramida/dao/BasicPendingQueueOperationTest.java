@@ -20,6 +20,7 @@ import com.piramida.dao.pendingqueue.PendingQueueDao;
 import com.piramida.entity.Account;
 import com.piramida.entity.PendingQueue;
 import com.piramida.entity.Queue;
+import com.piramida.entity.QueueType;
 
 @TransactionConfiguration(transactionManager = "txManager", defaultRollback = true)
 @Transactional
@@ -73,7 +74,7 @@ public class BasicPendingQueueOperationTest implements ApplicationContextAware {
 	queue.setId(COMMON_ID);
 	queue.setAccount(getAccount());
 	queue.setPosition(2);
-	queue.setQueueType(QUEUE_TYPE);
+	queue.setQueueType(QueueType.C500);
 	return queue;
     }
 

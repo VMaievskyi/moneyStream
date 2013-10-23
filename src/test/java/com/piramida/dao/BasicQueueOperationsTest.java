@@ -25,7 +25,7 @@ import com.piramida.entity.Queue;
 import com.piramida.entity.QueueType;
 
 @TransactionConfiguration(transactionManager = "txManager", defaultRollback = true)
-@Transactional
+@Transactional()
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "/WEB-INF/appContext.xml" })
 public class BasicQueueOperationsTest implements ApplicationContextAware {
@@ -96,6 +96,35 @@ public class BasicQueueOperationsTest implements ApplicationContextAware {
 		.intValue());
     }
 
+    @Test
+    public void shouldFindFirstRow() {
+	queueDao.deleteAll();
+	initQueue();
+	queueDao.save(queue);
+
+	initQueue();
+	queue.setPosition(2);
+	queueDao.save(queue);
+
+	final Queue first = queueDao.getFirst();
+	assertEquals("not first row was returned", 1, first.getPosition()
+		.intValue());
+
+    }
+
+    @Test
+    public void shouldSwapPositions() {
+	queueDao.deleteAll();
+	initQueue();
+	queueDao.save(queue);
+	initQueue();
+	queue.setPosition(2);
+
+	assertEquals("Value of first queue wasn't changed", 2, queue
+		.getPosition().intValue());
+
+    }
+
     public void setApplicationContext(
 	    final ApplicationContext applicationContext) throws BeansException {
 
@@ -103,7 +132,7 @@ public class BasicQueueOperationsTest implements ApplicationContextAware {
 
     private void initQueue() {
 	queue = new Queue();
-	queue.setQueueType(QueueType.C500.toString());
+	queue.setQueueType(QueueType.C500);
 	queue.setPosition(1);
 	queue.setAccount(createTestAccount());
     }

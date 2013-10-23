@@ -3,6 +3,8 @@ package com.piramida.entity;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,9 +15,10 @@ import javax.persistence.ManyToOne;
 @Entity
 public class Queue {
     private Integer id;
-    private String queueType;
+
+    private QueueType queueType;
     private Integer position;
-    private String status;
+    private ActivationStatus status;
     private Account account;
     private Integer paymentCount;
     private Integer requiredPaymentCount;
@@ -41,34 +44,24 @@ public class Queue {
 	this.position = position;
     }
 
-    @Column(name = "queueType")
-    @Basic
-    public String getQueueType() {
-	return queueType;
-    }
-
-    public void setQueueType(final String queueType) {
-	this.queueType = queueType;
-    }
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "Account_id", referencedColumnName = "id", insertable = true)
     public Account getAccount() {
 	return account;
     }
 
+    @Column(name = "queueType")
+    @Enumerated(EnumType.STRING)
+    public QueueType getQueueType() {
+	return queueType;
+    }
+
+    public void setQueueType(final QueueType queueType) {
+	this.queueType = queueType;
+    }
+
     public void setAccount(final Account account) {
 	this.account = account;
-    }
-
-    @Column(name = "status")
-    @Basic
-    public String getStatus() {
-	return status;
-    }
-
-    public void setStatus(final String status) {
-	this.status = status;
     }
 
     @Column(name = "paymentCount")
@@ -89,6 +82,16 @@ public class Queue {
 
     public void setRequiredPaymentCount(final Integer requiredPaymentCount) {
 	this.requiredPaymentCount = requiredPaymentCount;
+    }
+
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    public ActivationStatus getStatus() {
+	return status;
+    }
+
+    public void setStatus(final ActivationStatus status) {
+	this.status = status;
     }
 
 }

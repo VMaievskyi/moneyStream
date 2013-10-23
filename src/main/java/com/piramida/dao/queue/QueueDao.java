@@ -5,4 +5,8 @@ import com.piramida.entity.Queue;
 
 public interface QueueDao extends GenericDao<Queue> {
 
+    void switchPositions(Queue queue, Queue secondRow);
+
+    Queue getFirst();
+
 }
