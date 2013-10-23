@@ -14,6 +14,7 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd">
 
 	<context:property-placeholder location="classpath:database.config" />
+	<context:property-placeholder location="classpath:mail.config" />
 	<context:component-scan base-package="com.piramida" />
 	<tx:annotation-driven transaction-manager="txManager" />
 	<mvc:annotation-driven />
@@ -42,23 +43,19 @@
 	<bean id="txManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
+	<bean id="jacksonMessageChanger" class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
+		<property name="supportedMediaTypes" value="application/json" />
+	</bean>
+
+	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+		<property name="messageConverters">
+			<util:list id="beanList">
+				<ref bean="jacksonMessageChanger" />
+			</util:list>
+		</property>
+	</bean>
 
 	<bean name="persistenceExceptionTranslationPostProcessor" class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" />
-
-	<bean name="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-		<property name="host" value="${mail.host}" />
-		<property name="username" value=""${mail.userName}"/>
-		<property name="password" value="${mail.password}"/>
-		<property name="port" value="${mail.port}"/>
-		<property name="protocol" value="${mail.protocol}"/>
-	</bean>
-
-	<!-- this is a template message that we can pre-load with default state -->
-	<bean name="templateMessage" class="org.springframework.mail.SimpleMailMessage">
-		<property name="from" value=""${mail.from}" />
-	</bean>
-	
-	
 
 	<bean name="abstractDao" class="com.piramida.dao.AbstractGenegicDao" abstract="true" />
 	<bean name="accountDao" class="com.piramida.dao.account.impl.DefaultAccountDao" parent="abstractDao" />
@@ -68,10 +65,8 @@
 	<bean name="accountService" class="com.piramida.service.account.impl.DefaultAccountService" />
 	<bean name="securityStringGenerator" class="com.piramida.service.security.impl.SecurityStringGeneratorService" />
 	<bean name="passwordGeneratorService" class="com.piramida.service.security.impl.PasswordGeneratorService" />
-	
-	<bean name="mailService" class="com.piramida.service.mail.impl.DefaultMailService" >
-		<property name="mailSender"  ref="mailSender"/>
-		<property name="simpleMailMessage" ref="templateMessage"/>
+
+	<bean name="mailService" class="com.piramida.service.mail.impl.DefaultMailService">
 	</bean>
 
 
