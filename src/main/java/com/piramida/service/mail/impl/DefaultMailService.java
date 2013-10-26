@@ -13,8 +13,6 @@ public class DefaultMailService implements MailService {
     private SimpleMailMessage simpleMailMessage;
 
     public void sendEmail(final EmailType emailType, final Account account) {
-	simpleMailMessage.setTo(account.getEmail());
-	simpleMailMessage.setSubject(emailType.getSubject());
 
     }
 

@@ -26,21 +26,15 @@ public class AccountController {
 
     }
 
-    @RequestMapping(value = "/new", method = RequestMethod.POST, consumes = "application/json")
-    public Account createAccount(@RequestBody final Account account)
-	    throws AccountOperationException {
-
-	return account;
-
-    }
-
-    @RequestMapping(value = "/echo", method = RequestMethod.GET)
+    @RequestMapping(value = "/new", method = RequestMethod.POST)
     @ResponseBody
-    public Account echoService() {
-	final Account a = new Account();
-	a.setEmail("fbsdjbfsdjbf");
-	a.setPassword("dfsknsdjf");
-	return a;
+    public void createAccount(@RequestBody final Account account)
+	    throws AccountOperationException {
+	if (account.getId() == null) {
+	    accountFacade.createAccount(account);
+	} else {
+	    throw new AccountOperationException("forbidden to update account");
+	}
     }
 
     public AccountFacade getAccountFacade() {

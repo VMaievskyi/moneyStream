@@ -2,6 +2,7 @@ package com.piramida.facade.impl;
 
 import org.apache.commons.lang.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.piramida.entity.Account;
 import com.piramida.entity.EmailType;
@@ -14,7 +15,11 @@ public class DefaultAccountFacade implements AccountFacade {
 
     @Autowired
     private AccountService accountService;
+    @Autowired
+    @Qualifier(value = "securityStringGenerator")
     private HashGeneratorService hashGeneratorService;
+    @Autowired
+    @Qualifier(value = "mailService")
     private MailService mailService;
 
     public void activateAccount(final String string) {
