@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.piramida.controller.exception.AccountOperationException;
-import com.piramida.entity.Account;
+import com.piramida.entity.dto.AccountDto;
 import com.piramida.facade.AccountFacade;
 
 @Controller
@@ -28,7 +28,7 @@ public class AccountController {
 
     @RequestMapping(value = "/new", method = RequestMethod.POST)
     @ResponseBody
-    public void createAccount(@RequestBody final Account account)
+    public void createAccount(@RequestBody final AccountDto account)
 	    throws AccountOperationException {
 	if (account.getId() == null) {
 	    accountFacade.createAccount(account);

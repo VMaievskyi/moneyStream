@@ -6,6 +6,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.piramida.entity.Account;
 import com.piramida.entity.EmailType;
+import com.piramida.entity.dto.AccountDto;
+import com.piramida.entity.mapper.factory.MapperFactory;
+import com.piramida.entity.mapper.impl.AbstractDtoEntityMapper;
 import com.piramida.facade.AccountFacade;
 import com.piramida.service.account.AccountService;
 import com.piramida.service.mail.MailService;
@@ -21,17 +24,23 @@ public class DefaultAccountFacade implements AccountFacade {
     @Autowired
     @Qualifier(value = "mailService")
     private MailService mailService;
+    @Autowired
+    private MapperFactory mapperFactory;
 
     public void activateAccount(final String string) {
 	Validate.notNull(string, "user activation string required");
 	getAccountService().activateUserAccount(string);
     }
 
-    public void createAccount(final Account account) {
-	Validate.notNull(account, "account cannot be null while creating");
-	Validate.notNull(account.getEmail(), "email field is mandatory");
-	Validate.notNull(account.getPassword(), "password field is mandatory");
-	if (getAccountService().findByEmail(account.getEmail()) == null) {
+    public void createAccount(final AccountDto accountDto) {
+	Validate.notNull(accountDto, "account cannot be null while creating");
+	Validate.notNull(accountDto.getEmail(), "email field is mandatory");
+	Validate.notNull(accountDto.getPassword(),
+		"password field is mandatory");
+	if (getAccountService().findByEmail(accountDto.getEmail()) == null) {
+	    final AbstractDtoEntityMapper instance = mapperFactory
+		    .createInstance(accountDto.getClass());
+	    final Account account = (Account) instance.map(accountDto);
 	    createValidetedAccount(account);
 	    mailService.sendEmail(EmailType.REGISTRATION, account);
 	} else {
