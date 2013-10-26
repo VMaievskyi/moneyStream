@@ -25,6 +25,7 @@ public class DefaultAccountFacade implements AccountFacade {
     @Qualifier(value = "mailService")
     private MailService mailService;
     @Autowired
+    @Qualifier("mapperFactory")
     private MapperFactory mapperFactory;
 
     public void activateAccount(final String string) {

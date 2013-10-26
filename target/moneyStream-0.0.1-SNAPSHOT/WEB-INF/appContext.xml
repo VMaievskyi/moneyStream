@@ -19,6 +19,21 @@
 	<tx:annotation-driven transaction-manager="txManager" />
 	<mvc:annotation-driven />
 
+	<bean name="abstractDtoEntityMapper" class="com.piramida.entity.mapper.impl.AbstractDtoEntityMapper" abstract="true" />
+	<bean name="accountDtoEntityMapper" class="com.piramida.entity.mapper.impl.AccountDtoEntityMapper" parent="abstractDtoEntityMapper" />
+	<bean name="walletDtoEntityMapper" class="com.piramida.entity.mapper.impl.WalletDtoEntityMapper" parent="abstractDtoEntityMapper" />
+
+
+	<bean name="mappersRegistry" class="com.piramida.entity.mapper.factory.MappersRegistry">
+		<property name="registeregMaps">
+			<map>
+				<entry key="com.piramida.entity.dto.AccountDto" value-ref="accountDtoEntityMapper" />
+				<entry key="com.piramida.entity.dto.WalletDto" value-ref="walletDtoEntityMapper" />
+			</map>
+		</property>
+	</bean>
+
+	<bean name="mapperFactory" class="com.piramida.entity.mapper.factory.impl.MapperFactoryImpl"></bean>
 
 
 	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">

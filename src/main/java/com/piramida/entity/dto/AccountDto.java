@@ -12,8 +12,8 @@ public class AccountDto implements Serializable {
     private String password;
     private ActivationStatus status;
     private String activationString;
-    private final Set<Integer> queuesIds = new HashSet<Integer>();
-    private final Set<Integer> walletsIds = new HashSet<Integer>();
+    private Set<Integer> queuesIds = new HashSet<Integer>();
+    private Set<WalletDto> wallets = new HashSet<WalletDto>();
 
     public Integer getId() {
 	return id;
@@ -59,8 +59,16 @@ public class AccountDto implements Serializable {
 	return queuesIds;
     }
 
-    public Set<Integer> getWalletsIds() {
-	return walletsIds;
+    public Set<WalletDto> getWallets() {
+	return wallets;
+    }
+
+    public void setWallets(final Set<WalletDto> wallets) {
+	this.wallets = wallets;
+    }
+
+    public void setQueuesIds(final Set<Integer> queuesIds) {
+	this.queuesIds = queuesIds;
     }
 
 }
