@@ -6,6 +6,7 @@ import org.hibernate.Session;
 import com.piramida.dao.AbstractGenegicDao;
 import com.piramida.dao.queue.QueueDao;
 import com.piramida.entity.Queue;
+import com.piramida.entity.QueueType;
 
 public class DefaultQueueDao extends AbstractGenegicDao<Queue> implements
 	QueueDao {
@@ -23,9 +24,13 @@ public class DefaultQueueDao extends AbstractGenegicDao<Queue> implements
 	updatePositionForRow(tempPosition, secondRow.getId());
     }
 
-    public Queue getFirst() {
+    public Queue getFirst(final QueueType queueType) {
 	final Query oneRowQuery = getSessionFactory().getCurrentSession()
-		.createQuery("from " + getEntityName()).setMaxResults(ONE);
+		.createQuery(
+			"from " + getEntityName()
+				+ " where queueType=:queueType");
+	oneRowQuery.setParameter("queueType", queueType);
+	oneRowQuery.setMaxResults(ONE);
 	return (Queue) oneRowQuery.uniqueResult();
 
     }

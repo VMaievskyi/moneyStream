@@ -18,6 +18,9 @@ import com.piramida.service.queue.impl.DefaultQueueService;
 
 public class QueueServiceTest {
 
+    private static final int PAYMENT_COUNT = 0;
+    private static final int REQUIRED_PAYMENT_COUNT = QueueType.C500
+	    .getRequiredPaymentCount();
     @Mock
     private QueueDao queueDaoMock;
     private Queue queue;
@@ -33,18 +36,21 @@ public class QueueServiceTest {
 
     @Test
     public void shouldAddRecordToDB() {
+	initTestQueue();
 	testInstance.putInQueue(queue);
 	verify(queueDaoMock).save(queue);
     }
 
     @Test
     public void shouldRemoveRecord() {
+	initTestQueue();
 	testInstance.remove(queue);
 	verify(queueDaoMock).delete(queue);
     }
 
     @Test
     public void shouldSwitchRowsPosition() {
+	initTestQueue();
 	final Queue secondRow = new Queue();
 	testInstance.switchPositions(queue, secondRow);
 	verify(queueDaoMock).switchPositions(queue, secondRow);
@@ -52,11 +58,36 @@ public class QueueServiceTest {
 
     @Test
     public void shouldReturnFirstRow() {
-	Mockito.when(queueDaoMock.getFirst()).thenReturn(queue);
-	final Queue firstRow = testInstance.getFirst();
-	verify(queueDaoMock).getFirst();
+	initTestQueue();
+	Mockito.when(queueDaoMock.getFirst(queue.getQueueType())).thenReturn(
+		queue);
+	final Queue firstRow = testInstance.getFirst(queue.getQueueType());
+	verify(queueDaoMock).getFirst(queue.getQueueType());
 	Assert.assertNotNull("Nothing were returned", firstRow);
+    }
 
+    @Test
+    public void shouldIncreasePaymentCount() {
+	initTestQueue();
+	Mockito.when(queueDaoMock.getFirst(queue.getQueueType())).thenReturn(
+		queue);
+	testInstance.increaseFirstRowPaymentCount(queue.getQueueType());
+	verify(queueDaoMock).getFirst(queue.getQueueType());
+	Assert.assertEquals("payment count wasn't increased",
+		PAYMENT_COUNT + 1, queue.getPaymentCount().intValue());
+    }
+
+    @Test
+    public void shouldRemoveFirstWhenPayedOff() {
+	initTestQueue();
+
+	final int oneStepFromPayOff = REQUIRED_PAYMENT_COUNT - 1;
+	queue.setPaymentCount(oneStepFromPayOff);
+	Mockito.when(queueDaoMock.getFirst(queue.getQueueType())).thenReturn(
+		queue);
+	testInstance.increaseFirstRowPaymentCount(queue.getQueueType());
+	verify(queueDaoMock).getFirst(queue.getQueueType());
+	verify(queueDaoMock).delete(queue);
     }
 
     private void initTestQueue() {
@@ -64,8 +95,8 @@ public class QueueServiceTest {
 	queue.setAccount(getAccount());
 	queue.setQueueType(QueueType.C500);
 	queue.setStatus(ActivationStatus.ACTIVE);
-	queue.setPaymentCount(0);
-	queue.setRequiredPaymentCount(QueueType.C500.getRequiredPaymentCount());
+	queue.setPaymentCount(PAYMENT_COUNT);
+	queue.setRequiredPaymentCount(REQUIRED_PAYMENT_COUNT);
 	queue.setPosition(1);
     }
 

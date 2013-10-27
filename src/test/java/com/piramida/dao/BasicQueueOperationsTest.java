@@ -106,7 +106,7 @@ public class BasicQueueOperationsTest implements ApplicationContextAware {
 	queue.setPosition(2);
 	queueDao.save(queue);
 
-	final Queue first = queueDao.getFirst();
+	final Queue first = queueDao.getFirst(queue.getQueueType());
 	assertEquals("not first row was returned", 1, first.getPosition()
 		.intValue());
 

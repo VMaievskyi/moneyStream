@@ -1,14 +1,20 @@
 package com.piramida.service.queue.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.piramida.dao.queue.QueueDao;
 import com.piramida.entity.Queue;
+import com.piramida.entity.QueueType;
 import com.piramida.service.queue.QueueService;
 
 public class DefaultQueueService implements QueueService {
+
+    private static Logger LOG = LoggerFactory
+	    .getLogger(DefaultQueueService.class);
 
     @Autowired
     private QueueDao queueDao;
@@ -16,21 +22,44 @@ public class DefaultQueueService implements QueueService {
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public void putInQueue(final Queue queue) {
 	queueDao.save(queue);
+	if (LOG.isDebugEnabled()) {
+	    LOG.debug(" queue record  was saved{}", queue);
+	}
     }
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public void remove(final Queue queue) {
+	if (LOG.isDebugEnabled()) {
+	    LOG.debug("about to delete queue record {}", queue);
+	}
 	queueDao.delete(queue);
     }
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public void switchPositions(final Queue queue, final Queue secondRow) {
+	if (LOG.isDebugEnabled()) {
+	    LOG.debug("about to switch postions for queue records {} and {}",
+		    queue, secondRow);
+	}
 	queueDao.switchPositions(queue, secondRow);
     }
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
-    public Queue getFirst() {
-	return queueDao.getFirst();
+    public Queue getFirst(final QueueType queueType) {
+	return queueDao.getFirst(queueType);
+    }
+
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    public void increaseFirstRowPaymentCount(final QueueType queueType) {
+	final Queue first = queueDao.getFirst(queueType);
+	Integer paymentCount = first.getPaymentCount();
+	first.setPaymentCount(++paymentCount);
+	if (first.getPaymentCount().equals(first.getRequiredPaymentCount())) {
+	    LOG.info(
+		    "Position in queue {} is payed off. About to delete record=> {}",
+		    first.getQueueType(), first);
+	    queueDao.delete(first);
+	}
     }
 
     public QueueDao getQueueDao() {

@@ -1,5 +1,7 @@
 package com.piramida.service.account.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,17 +12,26 @@ import com.piramida.service.account.AccountService;
 
 public class DefaultAccountService implements AccountService {
 
+    private static Logger LOG = LoggerFactory
+	    .getLogger(DefaultAccountService.class);
+
     @Autowired
     private AccountDao accountDao;
 
     @Transactional
     public void createUserAccount(final Account account) {
 	saveAccount(account);
+	if (LOG.isDebugEnabled()) {
+	    LOG.debug("account was created => {}", account);
+	}
     }
 
     @Transactional
     public void updateUserAccount(final Account account) {
 	saveAccount(account);
+	if (LOG.isDebugEnabled()) {
+	    LOG.debug("account was updated => {}", account);
+	}
     }
 
     @Transactional
@@ -30,6 +41,9 @@ public class DefaultAccountService implements AccountService {
 	if (unactivatedAccount.getStatus() == ActivationStatus.PENDING) {
 	    unactivatedAccount.setStatus(ActivationStatus.ACTIVE);
 	    accountDao.save(unactivatedAccount);
+	    if (LOG.isDebugEnabled()) {
+		LOG.debug("account was activated => {}", unactivatedAccount);
+	    }
 	}
     }
 
@@ -38,6 +52,9 @@ public class DefaultAccountService implements AccountService {
 	if (account.getStatus() == ActivationStatus.ACTIVE) {
 	    account.setStatus(ActivationStatus.PENDING);
 	    accountDao.save(account);
+	    if (LOG.isDebugEnabled()) {
+		LOG.debug("account was deactivated => {}", account);
+	    }
 	}
     }
 
