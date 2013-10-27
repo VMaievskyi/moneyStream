@@ -1,6 +1,8 @@
 package com.piramida.entity.dto;
 
-public class WalletDto {
+import java.io.Serializable;
+
+public class WalletDto implements Serializable {
     private Integer id;
     private String waletNumber;
     private String walletType;

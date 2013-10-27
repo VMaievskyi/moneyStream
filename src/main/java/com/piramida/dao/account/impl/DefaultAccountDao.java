@@ -1,11 +1,14 @@
 package com.piramida.dao.account.impl;
 
+import java.util.Set;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
 
 import com.piramida.dao.AbstractGenegicDao;
 import com.piramida.dao.account.AccountDao;
 import com.piramida.entity.Account;
+import com.piramida.entity.Wallet;
 
 public class DefaultAccountDao extends AbstractGenegicDao<Account> implements
 	AccountDao {
@@ -29,6 +32,20 @@ public class DefaultAccountDao extends AbstractGenegicDao<Account> implements
 	return (Account) currentSession.createQuery(
 		"from Account where activationString= '" + activationString
 			+ "'").uniqueResult();
+    }
+
+    @Override
+    public void save(final Account entity) {
+	final Set<Wallet> wallets = entity.getWallets();
+	if (wallets != null) {
+	    entity.setWallets(null);
+	    super.save(entity);
+	    for (final Wallet wallet : wallets) {
+		wallet.setOwner(entity);
+	    }
+	    entity.setWallets(wallets);
+	}
+	super.save(entity);
     }
 
 }

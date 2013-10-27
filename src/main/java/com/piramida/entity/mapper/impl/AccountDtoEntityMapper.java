@@ -1,6 +1,7 @@
 package com.piramida.entity.mapper.impl;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,7 @@ public class AccountDtoEntityMapper extends
     }
 
     private void mapQueues(final AccountDto source, final Account target) {
-	final Set<Integer> queuesIds = source.getQueuesIds();
+	final List<Integer> queuesIds = source.getQueuesIds();
 	if (queuesIds != null) {
 	    for (final int id : queuesIds) {
 
@@ -41,7 +42,7 @@ public class AccountDtoEntityMapper extends
     }
 
     private void mapWallets(final AccountDto source, final Account target) {
-	final Set<WalletDto> walletsDto = source.getWallets();
+	final List<WalletDto> walletsDto = source.getWallets();
 	final Set<Wallet> wallets = new HashSet<Wallet>();
 	if (walletsDto != null) {
 	    final AbstractDtoEntityMapper mapper = mapperFactory

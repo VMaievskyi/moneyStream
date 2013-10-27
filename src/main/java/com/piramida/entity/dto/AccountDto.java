@@ -1,8 +1,7 @@
 package com.piramida.entity.dto;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 import com.piramida.entity.ActivationStatus;
 
@@ -12,8 +11,8 @@ public class AccountDto implements Serializable {
     private String password;
     private ActivationStatus status;
     private String activationString;
-    private Set<Integer> queuesIds = new HashSet<Integer>();
-    private Set<WalletDto> wallets = new HashSet<WalletDto>();
+    private List<Integer> queuesIds;
+    private List<WalletDto> wallets;
 
     public Integer getId() {
 	return id;
@@ -55,20 +54,20 @@ public class AccountDto implements Serializable {
 	this.activationString = activationString;
     }
 
-    public Set<Integer> getQueuesIds() {
+    public List<Integer> getQueuesIds() {
 	return queuesIds;
     }
 
-    public Set<WalletDto> getWallets() {
+    public void setQueuesIds(final List<Integer> queuesIds) {
+	this.queuesIds = queuesIds;
+    }
+
+    public List<WalletDto> getWallets() {
 	return wallets;
     }
 
-    public void setWallets(final Set<WalletDto> wallets) {
+    public void setWallets(final List<WalletDto> wallets) {
 	this.wallets = wallets;
-    }
-
-    public void setQueuesIds(final Set<Integer> queuesIds) {
-	this.queuesIds = queuesIds;
     }
 
 }

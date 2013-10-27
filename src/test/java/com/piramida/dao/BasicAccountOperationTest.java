@@ -163,7 +163,6 @@ public class BasicAccountOperationTest implements ApplicationContextAware {
 	final Wallet wallet = new Wallet();
 	wallet.setWaletNumber(WALLET_NUMBER);
 	wallet.setWalletType(WALLET_TYPE);
-	wallet.setOwner(testAccount);
 	final Set<Wallet> wallets = new HashSet<Wallet>();
 	wallets.add(wallet);
 	testAccount.setWallets(wallets);

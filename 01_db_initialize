@@ -36,7 +36,6 @@ CREATE  TABLE IF NOT EXISTS `hibnatedb`.`Wallet` (
   `waletNumber` VARCHAR(255) NULL ,
   `owner` INT NOT NULL ,
   PRIMARY KEY (`id`, `owner`) ,
-  UNIQUE INDEX `waletNumber_UNIQUE` (`waletNumber` ASC) ,
   INDEX `fk_wallet_account` (`owner` ASC) ,
   CONSTRAINT `fk_wallets_users`
     FOREIGN KEY (`owner` )

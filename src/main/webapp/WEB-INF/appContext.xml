@@ -13,8 +13,7 @@
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd">
 
-	<context:property-placeholder location="classpath:database.config" />
-	<context:property-placeholder location="classpath:mail.config" />
+	<context:property-placeholder  location="classpath:database.config,classpath:mail.config" />
 	<context:component-scan base-package="com.piramida" />
 	<tx:annotation-driven transaction-manager="txManager" />
 	<mvc:annotation-driven />
@@ -81,9 +80,37 @@
 	<bean name="securityStringGenerator" class="com.piramida.service.security.impl.SecurityStringGeneratorService" />
 	<bean name="passwordGeneratorService" class="com.piramida.service.security.impl.PasswordGeneratorService" />
 
-	<bean name="mailService" class="com.piramida.service.mail.impl.DefaultMailService">
+	<bean name="mailService" class="com.piramida.service.mail.impl.DefaultMailService" />
+
+	<bean id="templateMessage" class="org.springframework.mail.SimpleMailMessage">
+		<property name="from">
+			<value>${mail.from}</value>
+		</property>
 	</bean>
 
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host">
+			<value>${mail.host}</value>
+		</property>
+		<property name="username">
+			<value>${mail.userName}</value>
+		</property>
+		<property name="password">
+			<value>${mail.password}</value>
+		</property>
+		<property name="port">
+			<value>${mail.port}</value>
+		</property>
+		<property name="protocol"  value="smtps"/>
+		<property name="javaMailProperties">
+            <props>
+                <prop key="mail.transport.protocol">smtp</prop>
+                <prop key="mail.smtp.auth">true</prop>
+                <prop key="mail.smtp.starttls.enable">true</prop>
+                <prop key="mail.debug">true</prop>
+            </props>
+        </property>
+	</bean>
 
 	<bean name="accountFacade" class="com.piramida.facade.impl.DefaultAccountFacade">
 		<property name="accountService" ref="accountService" />
