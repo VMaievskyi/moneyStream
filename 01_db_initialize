@@ -17,6 +17,7 @@ CREATE  TABLE IF NOT EXISTS `hibnatedb`.`Account` (
   `password` VARCHAR(255) NULL ,
   `status` VARCHAR(50) NULL ,
   `activationString` VARCHAR(75) NULL ,
+  `role` VARCHAR(45) NULL DEFAULT 'User' ,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `email_UNIQUE` (`email` ASC) )
 ENGINE = InnoDB
@@ -73,27 +74,6 @@ DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
 
 
--- -----------------------------------------------------
--- Table `hibnatedb`.`PendingQueue`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `hibnatedb`.`PendingQueue` ;
-
-CREATE  TABLE IF NOT EXISTS `hibnatedb`.`PendingQueue` (
-  `id` INT NOT NULL AUTO_INCREMENT ,
-  `Queue_id` INT NOT NULL ,
-  `Queue_Account_id` INT NOT NULL ,
-  PRIMARY KEY (`id`, `Queue_id`, `Queue_Account_id`) ,
-  INDEX `fk_Pending_queue_Queue1` (`Queue_id` ASC, `Queue_Account_id` ASC) ,
-  CONSTRAINT `fk_Pending_queue_Queue1`
-    FOREIGN KEY (`Queue_id` , `Queue_Account_id` )
-    REFERENCES `hibnatedb`.`Queue` (`id` , `Account_id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8
-COLLATE = utf8_general_ci;
-
-
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
@@ -104,7 +84,7 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `hibnatedb`;
-INSERT INTO `hibnatedb`.`Account` (`id`, `email`, `password`, `status`, `activationString`) VALUES (1, 'slava@mail.ru', '555666', 'active', NULL);
+INSERT INTO `hibnatedb`.`Account` (`id`, `email`, `password`, `status`, `activationString`, `role`) VALUES (1, 'slava@mail.ru', '555666', 'active', NULL, NULL);
 
 COMMIT;
 

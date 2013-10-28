@@ -5,6 +5,7 @@ import org.hibernate.Session;
 
 import com.piramida.dao.AbstractGenegicDao;
 import com.piramida.dao.queue.QueueDao;
+import com.piramida.entity.ActivationStatus;
 import com.piramida.entity.Queue;
 import com.piramida.entity.QueueType;
 
@@ -25,11 +26,14 @@ public class DefaultQueueDao extends AbstractGenegicDao<Queue> implements
     }
 
     public Queue getFirst(final QueueType queueType) {
-	final Query oneRowQuery = getSessionFactory().getCurrentSession()
+	final Query oneRowQuery = getSessionFactory()
+		.getCurrentSession()
 		.createQuery(
-			"from " + getEntityName()
-				+ " where queueType=:queueType");
+			"from "
+				+ getEntityName()
+				+ " where queueType=:queueType and status=:status");
 	oneRowQuery.setParameter("queueType", queueType);
+	oneRowQuery.setParameter("status", ActivationStatus.ACTIVE);
 	oneRowQuery.setMaxResults(ONE);
 	return (Queue) oneRowQuery.uniqueResult();
 

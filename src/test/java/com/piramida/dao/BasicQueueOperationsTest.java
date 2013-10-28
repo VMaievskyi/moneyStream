@@ -97,17 +97,24 @@ public class BasicQueueOperationsTest implements ApplicationContextAware {
     }
 
     @Test
-    public void shouldFindFirstRow() {
+    public void shouldFindFirstRowInActiveStatus() {
 	queueDao.deleteAll();
 	initQueue();
+	queue.setStatus(ActivationStatus.PENDING);
 	queueDao.save(queue);
 
 	initQueue();
 	queue.setPosition(2);
+	queue.setStatus(ActivationStatus.ACTIVE);
+	queueDao.save(queue);
+
+	initQueue();
+	queue.setPosition(3);
+	queue.setStatus(ActivationStatus.ACTIVE);
 	queueDao.save(queue);
 
 	final Queue first = queueDao.getFirst(queue.getQueueType());
-	assertEquals("not first row was returned", 1, first.getPosition()
+	assertEquals("not first row was returned", 2, first.getPosition()
 		.intValue());
 
     }
@@ -123,6 +130,15 @@ public class BasicQueueOperationsTest implements ApplicationContextAware {
 	assertEquals("Value of first queue wasn't changed", 2, queue
 		.getPosition().intValue());
 
+    }
+
+    @Test
+    public void shouldFindById() {
+	queueDao.deleteAll();
+	initQueue();
+	queueDao.save(queue);
+	final Queue record = queueDao.findById(queue.getId());
+	assertEquals("Records not same", queue, record);
     }
 
     public void setApplicationContext(
