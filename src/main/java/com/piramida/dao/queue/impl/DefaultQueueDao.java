@@ -1,5 +1,7 @@
 package com.piramida.dao.queue.impl;
 
+import java.util.List;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
 
@@ -17,6 +19,13 @@ public class DefaultQueueDao extends AbstractGenegicDao<Queue> implements
     @Override
     protected String getEntityName() {
 	return "Queue";
+    }
+
+    @Override
+    public List<Queue> findAll() {
+	final Query allQueues = getSessionFactory().getCurrentSession()
+		.createQuery(findAll + " order by position");
+	return allQueues.list();
     }
 
     public void switchPositions(final Queue queue, final Queue secondRow) {
@@ -39,6 +48,24 @@ public class DefaultQueueDao extends AbstractGenegicDao<Queue> implements
 
     }
 
+    public Queue findById(final Integer id) {
+	final Session currentSession = getSessionFactory().getCurrentSession();
+	final Query byIdQuery = currentSession
+		.createQuery("from Queue where id=:id");
+	byIdQuery.setParameter("id", id);
+	return (Queue) byIdQuery.uniqueResult();
+    }
+
+    public List<Queue> findAllRange(final int istartIndex,
+	    final int countToReturn) {
+	final Session currentSession = getSessionFactory().getCurrentSession();
+	final Query rangedSearch = currentSession
+		.createQuery("from " + getEntityName())
+		.setFirstResult(istartIndex)
+		.setMaxResults(countToReturn + istartIndex);
+	return rangedSearch.list();
+    }
+
     private void updatePositionForRow(final int newPosition, final int currentId) {
 	final Session currentSession = getSessionFactory().getCurrentSession();
 	final Query firstQuery = currentSession.createQuery("Update "
@@ -47,4 +74,5 @@ public class DefaultQueueDao extends AbstractGenegicDao<Queue> implements
 	firstQuery.setParameter("idv", currentId);
 	firstQuery.executeUpdate();
     }
+
 }

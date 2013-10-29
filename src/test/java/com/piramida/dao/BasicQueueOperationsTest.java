@@ -141,6 +141,21 @@ public class BasicQueueOperationsTest implements ApplicationContextAware {
 	assertEquals("Records not same", queue, record);
     }
 
+    @Test
+    public void shouldSelectRowsInRange() {
+	queueDao.deleteAll();
+	for (int i = 0; i < 10; i++) {
+	    initQueue();
+	    queue.setPosition(i);
+	    queueDao.save(queue);
+	}
+	final List<Queue> result = queueDao.findAllRange(2, 4);
+	assertEquals("Wrong count of elements was returned", 6, result.size());
+
+	assertEquals("wrong record from table was returned", 2, result.get(0)
+		.getPosition().intValue());
+    }
+
     public void setApplicationContext(
 	    final ApplicationContext applicationContext) throws BeansException {
 

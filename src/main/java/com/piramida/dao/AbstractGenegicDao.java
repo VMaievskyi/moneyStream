@@ -13,11 +13,11 @@ public abstract class AbstractGenegicDao<T> implements GenericDao<T> {
 
     protected abstract String getEntityName();
 
+    protected String findAll = "from " + getEntityName();
+
     public List<T> findAll() {
 	final Session currentSession = sessionFactory.getCurrentSession();
-	final List list = currentSession.createQuery("from " + getEntityName())
-		.list();
-	return list;
+	return currentSession.createQuery(findAll).list();
     }
 
     public void deleteAll() {
