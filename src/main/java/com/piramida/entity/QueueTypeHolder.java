@@ -1,17 +1,22 @@
 package com.piramida.entity;
 
 import java.util.Map;
+import java.util.Set;
 
-public final class QueueTypeHolder {
+public class QueueTypeHolder {
 
     private Map<String, QueueType> queueTypes;
 
-    public Map<String, QueueType> getQueueTypes() {
-	return queueTypes;
+    public Set<String> getAllQueueTypeNames() {
+	return queueTypes.keySet();
     }
 
-    public void setQueueTypes(final Map<String, QueueType> queueTypes) {
-	this.queueTypes = queueTypes;
+    public QueueType getQueuTypeByName(final String key) {
+	return queueTypes.get(key);
+    }
+
+    public void putQueuType(final String key, final QueueType value) {
+	queueTypes.put(key, value);
     }
 
 }

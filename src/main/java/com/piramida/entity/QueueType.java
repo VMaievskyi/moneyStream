@@ -4,7 +4,7 @@ public class QueueType {
 
     private int sumToPay;
     private int requiredPaymentCount;
-    private boolean isVIPOnly;
+    private Boolean isVIPOnly;
     private int numberOfVisiblePositions;
 
     public int getSumToPay() {
@@ -23,11 +23,11 @@ public class QueueType {
 	this.requiredPaymentCount = requiredPaymentCount;
     }
 
-    public boolean isVIPOnly() {
+    public Boolean isVIPOnly() {
 	return isVIPOnly;
     }
 
-    public void setVIPOnly(final boolean isVIPOnly) {
+    public void setVIPOnly(final Boolean isVIPOnly) {
 	this.isVIPOnly = isVIPOnly;
     }
 
