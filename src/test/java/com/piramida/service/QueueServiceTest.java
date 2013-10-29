@@ -13,14 +13,15 @@ import com.piramida.dao.queue.QueueDao;
 import com.piramida.entity.Account;
 import com.piramida.entity.ActivationStatus;
 import com.piramida.entity.Queue;
-import com.piramida.entity.QueueType;
 import com.piramida.service.queue.impl.DefaultQueueService;
 
 public class QueueServiceTest {
 
+    private static final int COUNT_TO_RETURN = 5;
+    private static final int START_IDX = 1;
+    private static final int ID = 2;
     private static final int PAYMENT_COUNT = 0;
-    private static final int REQUIRED_PAYMENT_COUNT = QueueType.C500
-	    .getRequiredPaymentCount();
+    private static final int REQUIRED_PAYMENT_COUNT = 2;
     @Mock
     private QueueDao queueDaoMock;
     private Queue queue;
@@ -90,10 +91,22 @@ public class QueueServiceTest {
 	verify(queueDaoMock).delete(queue);
     }
 
+    @Test
+    public void shouldFindById() {
+	final Queue result = testInstance.findById(ID);
+	verify(queueDaoMock).findById(ID);
+    }
+
+    @Test
+    public void shouldFindAllWithRange() {
+	testInstance.findAllRange(START_IDX, COUNT_TO_RETURN);
+	verify(queueDaoMock).findAllRange(START_IDX, COUNT_TO_RETURN);
+    }
+
     private void initTestQueue() {
 	queue = new Queue();
 	queue.setAccount(getAccount());
-	queue.setQueueType(QueueType.C500);
+	queue.setQueueType("C500");
 	queue.setStatus(ActivationStatus.ACTIVE);
 	queue.setPaymentCount(PAYMENT_COUNT);
 	queue.setRequiredPaymentCount(REQUIRED_PAYMENT_COUNT);

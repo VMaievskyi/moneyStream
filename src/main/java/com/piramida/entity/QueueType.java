@@ -1,26 +1,42 @@
 package com.piramida.entity;
 
-public enum QueueType {
-    C500(500, 2), C1000(1000, 3);
+public class QueueType {
 
-    private int cost;
-    private final int requiredPaymentCount;
+    private int sumToPay;
+    private int requiredPaymentCount;
+    private boolean isVIPOnly;
+    private int numberOfVisiblePositions;
 
-    private QueueType(final int cost, final int requiredPaymentCount) {
-	this.cost = cost;
-	this.requiredPaymentCount = requiredPaymentCount;
+    public int getSumToPay() {
+	return sumToPay;
     }
 
-    public int getCost() {
-	return cost;
-    }
-
-    public void setCost(final int cost) {
-	this.cost = cost;
+    public void setSumToPay(final int sumToPay) {
+	this.sumToPay = sumToPay;
     }
 
     public int getRequiredPaymentCount() {
 	return requiredPaymentCount;
+    }
+
+    public void setRequiredPaymentCount(final int requiredPaymentCount) {
+	this.requiredPaymentCount = requiredPaymentCount;
+    }
+
+    public boolean isVIPOnly() {
+	return isVIPOnly;
+    }
+
+    public void setVIPOnly(final boolean isVIPOnly) {
+	this.isVIPOnly = isVIPOnly;
+    }
+
+    public int getNumberOfVisiblePositions() {
+	return numberOfVisiblePositions;
+    }
+
+    public void setNumberOfVisiblePositions(final int numberOfVisiblePositions) {
+	this.numberOfVisiblePositions = numberOfVisiblePositions;
     }
 
 }

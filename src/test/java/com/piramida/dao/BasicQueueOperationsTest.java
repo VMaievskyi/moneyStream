@@ -22,7 +22,6 @@ import com.piramida.dao.queue.QueueDao;
 import com.piramida.entity.Account;
 import com.piramida.entity.ActivationStatus;
 import com.piramida.entity.Queue;
-import com.piramida.entity.QueueType;
 
 @TransactionConfiguration(transactionManager = "txManager", defaultRollback = true)
 @Transactional()
@@ -163,7 +162,7 @@ public class BasicQueueOperationsTest implements ApplicationContextAware {
 
     private void initQueue() {
 	queue = new Queue();
-	queue.setQueueType(QueueType.C500);
+	queue.setQueueType("C500");
 	queue.setPosition(1);
 	queue.setAccount(createTestAccount());
     }

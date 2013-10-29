@@ -94,4 +94,12 @@ public class DefaultAccountFacade implements AccountFacade {
 	this.mailService = mailService;
     }
 
+    public MapperFactory getMapperFactory() {
+	return mapperFactory;
+    }
+
+    public void setMapperFactory(final MapperFactory mapperFactory) {
+	this.mapperFactory = mapperFactory;
+    }
+
 }

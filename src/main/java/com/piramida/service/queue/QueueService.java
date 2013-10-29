@@ -1,7 +1,6 @@
 package com.piramida.service.queue;
 
 import com.piramida.entity.Queue;
-import com.piramida.entity.QueueType;
 
 public interface QueueService {
 
@@ -11,7 +10,9 @@ public interface QueueService {
 
     void switchPositions(final Queue queue, final Queue secondRow);
 
-    Queue getFirst(QueueType queueType);
+    Queue getFirst(String queueType);
 
-    void increaseFirstRowPaymentCount(QueueType queueType);
+    void increaseFirstRowPaymentCount(String queueType);
+
+    Queue findById(final int i);
 }

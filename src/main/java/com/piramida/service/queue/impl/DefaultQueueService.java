@@ -1,5 +1,7 @@
 package com.piramida.service.queue.impl;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.piramida.dao.queue.QueueDao;
 import com.piramida.entity.Queue;
-import com.piramida.entity.QueueType;
 import com.piramida.service.queue.QueueService;
 
 public class DefaultQueueService implements QueueService {
@@ -45,12 +46,12 @@ public class DefaultQueueService implements QueueService {
     }
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
-    public Queue getFirst(final QueueType queueType) {
+    public Queue getFirst(final String queueType) {
 	return queueDao.getFirst(queueType);
     }
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
-    public void increaseFirstRowPaymentCount(final QueueType queueType) {
+    public void increaseFirstRowPaymentCount(final String queueType) {
 	final Queue first = queueDao.getFirst(queueType);
 	Integer paymentCount = first.getPaymentCount();
 	first.setPaymentCount(++paymentCount);
@@ -60,6 +61,18 @@ public class DefaultQueueService implements QueueService {
 		    first.getQueueType(), first);
 	    queueDao.delete(first);
 	}
+    }
+
+    @Transactional
+    public Queue findById(final int id) {
+	return getQueueDao().findById(id);
+    }
+
+    @Transactional
+    public List<Queue> findAllRange(final int istartIndex,
+	    final int countToReturn) {
+	return getQueueDao().findAllRange(istartIndex, countToReturn);
+
     }
 
     public QueueDao getQueueDao() {

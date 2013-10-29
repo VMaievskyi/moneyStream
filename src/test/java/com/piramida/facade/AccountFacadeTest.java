@@ -5,13 +5,16 @@ import static org.mockito.Mockito.when;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import com.piramida.entity.Account;
 import com.piramida.entity.EmailType;
+import com.piramida.entity.dto.AccountDto;
+import com.piramida.entity.mapper.factory.MapperFactory;
+import com.piramida.entity.mapper.impl.AbstractDtoEntityMapper;
 import com.piramida.facade.impl.DefaultAccountFacade;
 import com.piramida.service.account.AccountService;
 import com.piramida.service.mail.MailService;
@@ -29,6 +32,11 @@ public class AccountFacadeTest {
     private HashGeneratorService hashGeneratorServiceMock;
     @Mock
     private MailService mailServiceMock;
+    @Mock
+    private MapperFactory mapperFactoryMock;
+    @Mock
+    private AbstractDtoEntityMapper mapperMock;
+    private AccountDto accountDto;
     private Account account;
 
     @Before
@@ -38,11 +46,15 @@ public class AccountFacadeTest {
 	testInstance.setAccountService(accountServiceMock);
 	testInstance.setHashGeneratorService(hashGeneratorServiceMock);
 	testInstance.setMailService(mailServiceMock);
+	testInstance.setMapperFactory(mapperFactoryMock);
 
 	initAccount();
 
 	when(hashGeneratorServiceMock.generateValue(EMAIL)).thenReturn(
 		ACTIVATE_USER_STRING);
+	when(mapperFactoryMock.createInstance(AccountDto.class)).thenReturn(
+		mapperMock);
+	when(mapperMock.map(Mockito.any(AccountDto.class))).thenReturn(account);
     }
 
     @Test
@@ -56,10 +68,10 @@ public class AccountFacadeTest {
 	testInstance.activateAccount(null);
     }
 
-    @Ignore
     @Test
     public void shouldCreateAccount() {
-	// testInstance.createAccount(account);
+	initAccountDto();
+	testInstance.createAccount(accountDto);
 	verify(hashGeneratorServiceMock).generateValue(EMAIL);
 	verify(accountServiceMock).createUserAccount(account);
 	verify(mailServiceMock).sendEmail(EmailType.REGISTRATION, account);
@@ -68,12 +80,11 @@ public class AccountFacadeTest {
 
     }
 
-    @Ignore
     @Test(expected = IllegalArgumentException.class)
     public void shouldNotCreateAccountFailedValidationOfFields() {
 	account.setEmail(null);
 	account.setPassword(null);
-	// testInstance.createAccount(account);
+	testInstance.createAccount(accountDto);
 
     }
 
@@ -82,11 +93,10 @@ public class AccountFacadeTest {
 	testInstance.createAccount(null);
     }
 
-    @Ignore
     @Test(expected = IllegalArgumentException.class)
     public void shouldNotCreateAccountInvalidEmail() {
 	when(accountServiceMock.findByEmail(EMAIL)).thenReturn(account);
-	// testInstance.createAccount(account);
+	testInstance.createAccount(accountDto);
     }
 
     @Test
@@ -98,6 +108,13 @@ public class AccountFacadeTest {
     @Test(expected = IllegalArgumentException.class)
     public void shouldNotDeactivateAccountNullPAssed() {
 	testInstance.deactivateAccount(null);
+    }
+
+    private void initAccountDto() {
+	accountDto = new AccountDto();
+	accountDto.setActivationString(ACTIVATE_USER_STRING);
+	accountDto.setEmail(EMAIL);
+	accountDto.setPassword(PASSWORD);
     }
 
     private void initAccount() {

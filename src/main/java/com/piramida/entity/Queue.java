@@ -16,7 +16,7 @@ import javax.persistence.ManyToOne;
 public class Queue {
     private Integer id;
 
-    private QueueType queueType;
+    private String queueType;
     private Integer position;
     private ActivationStatus status;
     private Account account;
@@ -50,13 +50,11 @@ public class Queue {
 	return account;
     }
 
-    @Column(name = "queueType")
-    @Enumerated(EnumType.STRING)
-    public QueueType getQueueType() {
+    public String getQueueType() {
 	return queueType;
     }
 
-    public void setQueueType(final QueueType queueType) {
+    public void setQueueType(final String queueType) {
 	this.queueType = queueType;
     }
 

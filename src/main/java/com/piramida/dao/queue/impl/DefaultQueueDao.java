@@ -9,7 +9,6 @@ import com.piramida.dao.AbstractGenegicDao;
 import com.piramida.dao.queue.QueueDao;
 import com.piramida.entity.ActivationStatus;
 import com.piramida.entity.Queue;
-import com.piramida.entity.QueueType;
 
 public class DefaultQueueDao extends AbstractGenegicDao<Queue> implements
 	QueueDao {
@@ -34,7 +33,7 @@ public class DefaultQueueDao extends AbstractGenegicDao<Queue> implements
 	updatePositionForRow(tempPosition, secondRow.getId());
     }
 
-    public Queue getFirst(final QueueType queueType) {
+    public Queue getFirst(final String queueType) {
 	final Query oneRowQuery = getSessionFactory()
 		.getCurrentSession()
 		.createQuery(
