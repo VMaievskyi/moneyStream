@@ -55,15 +55,13 @@ DROP TABLE IF EXISTS `hibnatedb`.`Queue` ;
 
 CREATE  TABLE IF NOT EXISTS `hibnatedb`.`Queue` (
   `id` INT NOT NULL AUTO_INCREMENT ,
-  `position` INT(11) NULL ,
   `queueType` VARCHAR(45) NULL ,
   `Account_id` INT NOT NULL ,
   `status` VARCHAR(45) NULL ,
-  `paymentCount` INT NULL ,
+  `paymentCount` INT NULL DEFAULT 0 ,
   `requiredPaymentCount` INT NULL ,
   PRIMARY KEY (`id`, `Account_id`) ,
   INDEX `fk_Queue_Account1` (`Account_id` ASC) ,
-  UNIQUE INDEX `positionIDX` (`position` ASC, `queueType` ASC) ,
   CONSTRAINT `fk_Queue_Account1`
     FOREIGN KEY (`Account_id` )
     REFERENCES `hibnatedb`.`Account` (`id` )
@@ -102,6 +100,6 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `hibnatedb`;
-INSERT INTO `hibnatedb`.`Queue` (`id`, `position`, `queueType`, `Account_id`, `status`, `paymentCount`, `requiredPaymentCount`) VALUES (1, 1, '1', 1, 'new', NULL, NULL);
+INSERT INTO `hibnatedb`.`Queue` (`id`, `queueType`, `Account_id`, `status`, `paymentCount`, `requiredPaymentCount`) VALUES (1, '1', 1, 'new', NULL, NULL);
 
 COMMIT;

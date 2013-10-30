@@ -17,7 +17,6 @@ public class Queue {
     private Integer id;
 
     private String queueType;
-    private Integer position;
     private ActivationStatus status;
     private Account account;
     private Integer paymentCount;
@@ -32,16 +31,6 @@ public class Queue {
 
     public void setId(final Integer id) {
 	this.id = id;
-    }
-
-    @Column(name = "position")
-    @Basic
-    public Integer getPosition() {
-	return position;
-    }
-
-    public void setPosition(final Integer position) {
-	this.position = position;
     }
 
     @ManyToOne(fetch = FetchType.LAZY)

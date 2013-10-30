@@ -1,5 +1,6 @@
 package com.piramida.entity;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,12 +16,15 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Table(name = "Account", schema = "", catalog = "hibnatedb")
 @Entity
-public class Account {
+public class Account implements UserDetails {
     private Integer id;
     @NotEmpty
     private String email;
@@ -96,6 +100,48 @@ public class Account {
 
     public void setActivationString(final String activationString) {
 	this.activationString = activationString;
+    }
+
+    @Transient
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+	// TODO Auto-generated method stub
+	return null;
+    }
+
+    @Transient
+    @Override
+    public String getUsername() {
+	// TODO Auto-generated method stub
+	return null;
+    }
+
+    @Transient
+    @Override
+    public boolean isAccountNonExpired() {
+	// TODO Auto-generated method stub
+	return false;
+    }
+
+    @Transient
+    @Override
+    public boolean isAccountNonLocked() {
+	// TODO Auto-generated method stub
+	return false;
+    }
+
+    @Transient
+    @Override
+    public boolean isCredentialsNonExpired() {
+	// TODO Auto-generated method stub
+	return false;
+    }
+
+    @Transient
+    @Override
+    public boolean isEnabled() {
+	// TODO Auto-generated method stub
+	return false;
     }
 
 }

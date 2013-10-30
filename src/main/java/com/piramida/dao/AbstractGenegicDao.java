@@ -28,7 +28,7 @@ public abstract class AbstractGenegicDao<T> implements GenericDao<T> {
 
     public void save(final T entity) {
 	final Session currentSession = sessionFactory.getCurrentSession();
-	currentSession.save(entity);
+	currentSession.saveOrUpdate(entity);
     }
 
     public void delete(final T entity) {

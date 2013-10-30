@@ -110,7 +110,6 @@ public class QueueServiceTest {
 	queue.setStatus(ActivationStatus.ACTIVE);
 	queue.setPaymentCount(PAYMENT_COUNT);
 	queue.setRequiredPaymentCount(REQUIRED_PAYMENT_COUNT);
-	queue.setPosition(1);
     }
 
     private Account getAccount() {

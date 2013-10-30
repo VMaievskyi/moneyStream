@@ -6,7 +6,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
-import org.hibernate.exception.ConstraintViolationException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.BeansException;
@@ -65,7 +64,7 @@ public class BasicQueueOperationsTest implements ApplicationContextAware {
 	initQueue();
 	queueDao.save(queue);
 	initQueue();
-	queue.setPosition(2);
+	queue.setRequiredPaymentCount(2);
 	queueDao.save(queue);
 	queueDao.delete(queue);
 
@@ -73,26 +72,17 @@ public class BasicQueueOperationsTest implements ApplicationContextAware {
 	assertFalse(allQueueEntry.contains(queue));
     }
 
-    @Test(expected = ConstraintViolationException.class)
-    public void shouldThrowConstraintViolationIfIndexBroken() {
-	queueDao.deleteAll();
-	initQueue();
-	queueDao.save(queue);
-	initQueue();
-	queueDao.save(queue);
-    }
-
     @Test
     public void shouldUpdatQueue() {
 	queueDao.deleteAll();
 	initQueue();
 	queueDao.save(queue);
-	queue.setPosition(10);
+	queue.setRequiredPaymentCount(10);
 	queueDao.save(queue);
 	final List<Queue> actual = queueDao.findAll();
 	assertEquals("More then 1 item were in db", 1, actual.size());
-	assertEquals("Item wasn't updated", 10, actual.get(0).getPosition()
-		.intValue());
+	assertEquals("Item wasn't updated", 10, actual.get(0)
+		.getRequiredPaymentCount().intValue());
     }
 
     @Test
@@ -100,21 +90,22 @@ public class BasicQueueOperationsTest implements ApplicationContextAware {
 	queueDao.deleteAll();
 	initQueue();
 	queue.setStatus(ActivationStatus.PENDING);
+	queue.setRequiredPaymentCount(1);
 	queueDao.save(queue);
 
 	initQueue();
-	queue.setPosition(2);
 	queue.setStatus(ActivationStatus.ACTIVE);
+	queue.setRequiredPaymentCount(2);
 	queueDao.save(queue);
 
 	initQueue();
-	queue.setPosition(3);
 	queue.setStatus(ActivationStatus.ACTIVE);
+	queue.setRequiredPaymentCount(3);
 	queueDao.save(queue);
 
 	final Queue first = queueDao.getFirst(queue.getQueueType());
-	assertEquals("not first row was returned", 2, first.getPosition()
-		.intValue());
+	assertEquals("not first row was returned", 2, first
+		.getRequiredPaymentCount().intValue());
 
     }
 
@@ -123,11 +114,18 @@ public class BasicQueueOperationsTest implements ApplicationContextAware {
 	queueDao.deleteAll();
 	initQueue();
 	queueDao.save(queue);
-	initQueue();
-	queue.setPosition(2);
+	final Queue q = new Queue();
 
-	assertEquals("Value of first queue wasn't changed", 2, queue
-		.getPosition().intValue());
+	q.setAccount(createTestAccount2());
+	q.setPaymentCount(5);
+	q.setQueueType("fff");
+	q.setStatus(ActivationStatus.ACTIVE);
+	queueDao.save(q);
+	queueDao.switchPositions(queue, q);
+	assertEquals("Value of first queue wasn't changed",
+		ActivationStatus.PENDING, queue.getAccount().getStatus());
+	assertEquals("Value of first queues payment count wasn't changed", 5,
+		queue.getPaymentCount().intValue());
 
     }
 
@@ -145,14 +143,14 @@ public class BasicQueueOperationsTest implements ApplicationContextAware {
 	queueDao.deleteAll();
 	for (int i = 0; i < 10; i++) {
 	    initQueue();
-	    queue.setPosition(i);
+	    queue.setRequiredPaymentCount(i);
 	    queueDao.save(queue);
 	}
 	final List<Queue> result = queueDao.findAllRange(2, 4);
 	assertEquals("Wrong count of elements was returned", 6, result.size());
 
 	assertEquals("wrong record from table was returned", 2, result.get(0)
-		.getPosition().intValue());
+		.getRequiredPaymentCount().intValue());
     }
 
     public void setApplicationContext(
@@ -163,7 +161,7 @@ public class BasicQueueOperationsTest implements ApplicationContextAware {
     private void initQueue() {
 	queue = new Queue();
 	queue.setQueueType("C500");
-	queue.setPosition(1);
+	queue.setRequiredPaymentCount(1);
 	queue.setAccount(createTestAccount());
     }
 
@@ -173,6 +171,15 @@ public class BasicQueueOperationsTest implements ApplicationContextAware {
 	account.setId(1);
 	account.setPassword(ACCOUNT_PASSWORD);
 	account.setStatus(ActivationStatus.ACTIVE);
+	return account;
+    }
+
+    private Account createTestAccount2() {
+	final Account account = new Account();
+	account.setEmail(ACCOUNT_EMAIL);
+	account.setId(1);
+	account.setPassword(ACCOUNT_PASSWORD);
+	account.setStatus(ActivationStatus.PENDING);
 	return account;
     }
 }
