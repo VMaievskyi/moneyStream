@@ -21,7 +21,6 @@
 
 	<beans:bean id="authProvider" class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
 		<beans:property name="userDetailsService" ref="userDetailsService" />
-		<beans:property name="passwordEncoder" ref="encoder" />
 	</beans:bean>
 
 	<beans:bean id="authenticationManager" class="org.springframework.security.authentication.ProviderManager">
@@ -34,6 +33,7 @@
 
 	<authentication-manager>
 		<authentication-provider user-service-ref="userDetailsService">
+		<security:password-encoder  ref="encoder"/>
 		</authentication-provider>
 	</authentication-manager>
 </beans:beans>   

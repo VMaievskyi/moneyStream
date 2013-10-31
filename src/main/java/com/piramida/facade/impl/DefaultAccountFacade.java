@@ -65,7 +65,10 @@ public class DefaultAccountFacade implements AccountFacade {
     private void createValidetedAccount(final Account account) {
 	final String activationString = getHashGeneratorService()
 		.generateValue(account.getEmail());
+	final String securedPassword = getHashGeneratorService().generateValue(
+		account.getPassword());
 	account.setActivationString(activationString);
+	account.setPassword(securedPassword);
 	getAccountService().createUserAccount(account);
     }
 
