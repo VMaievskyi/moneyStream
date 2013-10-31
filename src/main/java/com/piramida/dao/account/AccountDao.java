@@ -9,4 +9,6 @@ public interface AccountDao extends GenericDao<Account> {
 
     Account findByActivationString(String activationString);
 
+    Account findById(Integer accountId);
+
 }

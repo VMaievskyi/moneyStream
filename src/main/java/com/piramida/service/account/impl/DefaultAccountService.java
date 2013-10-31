@@ -20,6 +20,11 @@ public class DefaultAccountService implements AccountService {
     private AccountDao accountDao;
 
     @Transactional
+    public Account findById(final Integer accountId) {
+	return accountDao.findById(accountId);
+    }
+
+    @Transactional
     public void createUserAccount(final Account account) {
 	saveAccount(account);
 	if (LOG.isDebugEnabled()) {

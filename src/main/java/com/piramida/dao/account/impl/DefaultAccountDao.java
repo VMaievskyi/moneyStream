@@ -23,6 +23,15 @@ public class DefaultAccountDao extends AbstractGenegicDao<Account> implements
     }
 
     @Override
+    public Account findById(final Integer accountId) {
+	final Session currentSession = getSessionFactory().getCurrentSession();
+	final Query searchQuery = currentSession
+		.createQuery("from Account where id=:id");
+	searchQuery.setParameter("id", accountId);
+	return (Account) searchQuery.uniqueResult();
+    }
+
+    @Override
     protected String getEntityName() {
 	return "Account";
     }

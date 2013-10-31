@@ -13,4 +13,6 @@ public interface AccountService {
     void updateUserAccount(final Account account);
 
     Account findByEmail(String email);
+
+    Account findById(Integer accountId);
 }
