@@ -57,7 +57,7 @@ public class QueueController {
 	    @RequestParam(required = true) final String queueType,
 	    @RequestParam(required = true) final Integer accountId) {
 	queueFacade.putInQueue(queueType, accountId);
-	return null;
+	return new MessageDto("queue.cheat");
     }
 
     private Account getPrincipal() {
