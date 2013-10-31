@@ -1,7 +1,10 @@
 package com.piramida.facade.queue.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.core.context.SecurityContextHolder;
 
+import com.piramida.entity.Account;
 import com.piramida.entity.ActivationStatus;
 import com.piramida.entity.Queue;
 import com.piramida.entity.QueueType;
@@ -14,6 +17,7 @@ public class DefaultQueueFacade implements QueueFacade {
     @Autowired
     private QueueService queueService;
     @Autowired
+    @Qualifier("queueTypeHolder")
     private QueueTypeHolder queueTypeHolder;
 
     public void putInQueue(final String queueType) {
@@ -28,9 +32,14 @@ public class DefaultQueueFacade implements QueueFacade {
 	queue.setQueueType(queueType);
 	queue.setRequiredPaymentCount(queueTypeVal.getRequiredPaymentCount());
 	queue.setStatus(ActivationStatus.PENDING);
-
+	queue.setAccount(getPrincipal());
 	getQueueService().putInQueue(queue);
 
+    }
+
+    private Account getPrincipal() {
+	return (Account) SecurityContextHolder.getContext().getAuthentication()
+		.getPrincipal();
     }
 
     protected Queue createBlankQueue() {

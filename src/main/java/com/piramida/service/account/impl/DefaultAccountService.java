@@ -3,6 +3,7 @@ package com.piramida.service.account.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.piramida.dao.account.AccountDao;
@@ -34,10 +35,15 @@ public class DefaultAccountService implements AccountService {
 	}
     }
 
+    // TODO: Throw exception if account not found
     @Transactional
     public void activateUserAccount(final String userActivationString) {
 	final Account unactivatedAccount = accountDao
 		.findByActivationString(userActivationString);
+	if (unactivatedAccount == null) {
+	    throw new UsernameNotFoundException(
+		    "no user can be activated by this URL");
+	}
 	if (unactivatedAccount.getStatus() == ActivationStatus.PENDING) {
 	    unactivatedAccount.setStatus(ActivationStatus.ACTIVE);
 	    accountDao.save(unactivatedAccount);

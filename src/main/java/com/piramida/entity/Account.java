@@ -153,8 +153,8 @@ public class Account implements UserDetails {
     @Transient
     @Override
     public boolean isEnabled() {
-	// TODO Auto-generated method stub
-	return true;
+
+	return getStatus() == ActivationStatus.ACTIVE;
     }
 
 }

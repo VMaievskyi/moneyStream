@@ -19,4 +19,12 @@ public class QueueTypeHolder {
 	queueTypes.put(key, value);
     }
 
+    public Map<String, QueueType> getQueueTypes() {
+	return queueTypes;
+    }
+
+    public void setQueueTypes(final Map<String, QueueType> queueTypes) {
+	this.queueTypes = queueTypes;
+    }
+
 }

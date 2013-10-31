@@ -16,6 +16,7 @@
 		<param-value>
 			/WEB-INF/appContext.xml
 			/WEB-INF/application-security.xml
+			/WEB-INF/queueType.xml
 		</param-value>
 	</context-param>
 	<listener>

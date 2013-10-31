@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.piramida.entity.Account;
 import com.piramida.entity.EmailType;
+import com.piramida.entity.UserRoles;
 import com.piramida.entity.dto.AccountDto;
 import com.piramida.entity.mapper.factory.MapperFactory;
 import com.piramida.entity.mapper.impl.AbstractDtoEntityMapper;
@@ -63,13 +64,20 @@ public class DefaultAccountFacade implements AccountFacade {
     }
 
     private void createValidetedAccount(final Account account) {
-	final String activationString = getHashGeneratorService()
-		.generateValue(account.getEmail());
+	String activationString = getHashGeneratorService().generateValue(
+		account.getEmail());
+	activationString = makeUrlAppliable(activationString);
 	final String securedPassword = getHashGeneratorService().generateValue(
 		account.getPassword());
 	account.setActivationString(activationString);
 	account.setPassword(securedPassword);
+	account.setRole(UserRoles.USER.getRole());
 	getAccountService().createUserAccount(account);
+    }
+
+    private String makeUrlAppliable(final String activationString) {
+	return activationString.replace(".", "_").replace("\\", "_")
+		.replace("/", "_");
     }
 
     public AccountService getAccountService() {

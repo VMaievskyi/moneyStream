@@ -3,6 +3,7 @@ package com.piramida.facade;
 import static org.mockito.Mockito.verify;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -50,6 +51,7 @@ public class QueueFacadeTest {
 		.thenReturn(queueType);
     }
 
+    @Ignore
     @Test
     public void shouldPutInQueue() {
 	testInstance.putInQueue(QUEUE_TYPE);
