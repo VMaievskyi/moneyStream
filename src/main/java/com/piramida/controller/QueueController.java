@@ -30,36 +30,6 @@ public class QueueController {
 	return new MessageDto("queue.put.in");
     }
 
-    @Secured("ROLE_ADMIN")
-    @RequestMapping(method = RequestMethod.DELETE)
-    @ResponseBody
-    public MessageDto removeFromQueue(
-	    @RequestParam(required = true) final Integer id) {
-	queueFacade.removeFromQueue(id);
-	return new MessageDto("queue.delete");
-    }
-
-    @Secured("ROLE_ADMIN")
-    @RequestMapping(method = RequestMethod.GET)
-    @ResponseBody
-    public MessageDto swapQueues(
-	    @RequestParam(required = true) final Integer id1,
-	    @RequestParam(required = true) final Integer id2) {
-
-	queueFacade.swapQueues(id1, id2);
-	return new MessageDto("queue.swap");
-    }
-
-    @Secured("ROLE_ADMIN")
-    @RequestMapping(method = RequestMethod.PUT)
-    @ResponseBody
-    public MessageDto putInQueueCheat(
-	    @RequestParam(required = true) final String queueType,
-	    @RequestParam(required = true) final Integer accountId) {
-	queueFacade.putInQueue(queueType, accountId);
-	return new MessageDto("queue.cheat");
-    }
-
     private Account getPrincipal() {
 	return (Account) SecurityContextHolder.getContext().getAuthentication()
 		.getPrincipal();

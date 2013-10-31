@@ -10,6 +10,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 
+import com.piramida.entity.Account;
 import com.piramida.entity.ActivationStatus;
 import com.piramida.entity.Queue;
 import com.piramida.entity.QueueType;
@@ -54,7 +55,7 @@ public class QueueFacadeTest {
     @Ignore
     @Test
     public void shouldPutInQueue() {
-	testInstance.putInQueue(QUEUE_TYPE);
+	testInstance.putInQueue(QUEUE_TYPE, new Account());
 	verify(queue).setStatus(ActivationStatus.PENDING);
 	verify(queue).setPaymentCount(0);
 	verify(queue).setQueueType(QUEUE_TYPE);
