@@ -30,16 +30,12 @@ public class DefaultQueueDao extends AbstractGenegicDao<Queue> implements
 
     public void switchPositions(final Queue queue, final Queue secondRow) {
 	final Account tempPosition = queue.getAccount();
-	final Integer paymentCount = queue.getPaymentCount();
 	final Integer requiredPaymentCount = queue.getRequiredPaymentCount();
 
 	queue.setAccount(secondRow.getAccount());
-	queue.setPaymentCount(secondRow.getPaymentCount());
 	queue.setRequiredPaymentCount(secondRow.getRequiredPaymentCount());
 
 	secondRow.setAccount(tempPosition);
-	secondRow.setPaymentCount(paymentCount);
-	secondRow.setRequiredPaymentCount(paymentCount);
 
 	save(queue);
 	save(secondRow);

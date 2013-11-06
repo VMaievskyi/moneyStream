@@ -53,14 +53,7 @@ public class DefaultQueueService implements QueueService {
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public void increaseFirstRowPaymentCount(final String queueType) {
 	final Queue first = queueDao.getFirst(queueType);
-	Integer paymentCount = first.getPaymentCount();
-	first.setPaymentCount(++paymentCount);
-	if (first.getPaymentCount().equals(first.getRequiredPaymentCount())) {
-	    LOG.info(
-		    "Position in queue {} is payed off. About to delete record=> {}",
-		    first.getQueueType(), first);
-	    queueDao.delete(first);
-	}
+	queueDao.delete(first);
     }
 
     @Transactional

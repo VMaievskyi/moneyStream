@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.piramida.entity.Account;
-import com.piramida.entity.ActivationStatus;
 import com.piramida.entity.Queue;
 import com.piramida.entity.QueueType;
 import com.piramida.entity.QueueTypeHolder;
@@ -25,7 +24,6 @@ public class DefaultQueueFacade implements QueueFacade {
 
     public void putInQueue(final String queueType, final Account account) {
 	final Queue queue = prepareQueueForInsert(queueType);
-	queue.setStatus(ActivationStatus.PENDING);
 	queue.setAccount(account);
 	getQueueService().putInQueue(queue);
     }
@@ -35,7 +33,6 @@ public class DefaultQueueFacade implements QueueFacade {
 	if (accountById != null) {
 	    final Queue queue = prepareQueueForInsert(queueType);
 	    queue.setAccount(accountById);
-	    queue.setStatus(ActivationStatus.ACTIVE);
 	    getQueueService().putInQueue(queue);
 	}
     }
@@ -48,7 +45,6 @@ public class DefaultQueueFacade implements QueueFacade {
 	}
 
 	final Queue queue = createBlankQueue();
-	queue.setPaymentCount(0);
 	queue.setQueueType(queueType);
 	queue.setRequiredPaymentCount(queueTypeVal.getRequiredPaymentCount());
 	return queue;

@@ -11,7 +11,6 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 
 import com.piramida.entity.Account;
-import com.piramida.entity.ActivationStatus;
 import com.piramida.entity.Queue;
 import com.piramida.entity.QueueType;
 import com.piramida.entity.QueueTypeHolder;
@@ -56,8 +55,6 @@ public class QueueFacadeTest {
     @Test
     public void shouldPutInQueue() {
 	testInstance.putInQueue(QUEUE_TYPE, new Account());
-	verify(queue).setStatus(ActivationStatus.PENDING);
-	verify(queue).setPaymentCount(0);
 	verify(queue).setQueueType(QUEUE_TYPE);
 	verify(queue).setRequiredPaymentCount(REQUIRED_PAYMENT_COUNT);
 	verify(queueServiceMock).putInQueue(queue);

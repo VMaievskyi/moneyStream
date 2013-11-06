@@ -3,8 +3,6 @@ package com.piramida.entity;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,9 +15,7 @@ public class Queue {
     private Integer id;
 
     private String queueType;
-    private ActivationStatus status;
     private Account account;
-    private Integer paymentCount;
     private Integer requiredPaymentCount;
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,16 +47,6 @@ public class Queue {
 	this.account = account;
     }
 
-    @Column(name = "paymentCount")
-    @Basic
-    public Integer getPaymentCount() {
-	return paymentCount;
-    }
-
-    public void setPaymentCount(final Integer paymentCount) {
-	this.paymentCount = paymentCount;
-    }
-
     @Column(name = "requiredPaymentCount")
     @Basic
     public Integer getRequiredPaymentCount() {
@@ -69,16 +55,6 @@ public class Queue {
 
     public void setRequiredPaymentCount(final Integer requiredPaymentCount) {
 	this.requiredPaymentCount = requiredPaymentCount;
-    }
-
-    @Column(name = "status")
-    @Enumerated(EnumType.STRING)
-    public ActivationStatus getStatus() {
-	return status;
-    }
-
-    public void setStatus(final ActivationStatus status) {
-	this.status = status;
     }
 
 }
