@@ -36,6 +36,11 @@ public abstract class AbstractGenegicDao<T> implements GenericDao<T> {
 	currentSession.delete(entity);
     }
 
+    public void refresh(final T entity) {
+	final Session currentSession = sessionFactory.getCurrentSession();
+	currentSession.refresh(entity);
+    }
+
     public SessionFactory getSessionFactory() {
 	return sessionFactory;
     }

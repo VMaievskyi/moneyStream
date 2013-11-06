@@ -6,7 +6,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.BeansException;
@@ -74,7 +73,7 @@ public class BasicQueueOperationsTest implements ApplicationContextAware {
     }
 
     @Test
-    public void shouldUpdatQueue() {
+    public void shouldUpdateQueue() {
 	queueDao.deleteAll();
 	initQueue();
 	queueDao.save(queue);
@@ -86,7 +85,6 @@ public class BasicQueueOperationsTest implements ApplicationContextAware {
 		.getRequiredPaymentCount().intValue());
     }
 
-    @Ignore
     @Test
     public void shouldFindFirstRowInActiveStatus() {
 	queueDao.deleteAll();
@@ -103,22 +101,27 @@ public class BasicQueueOperationsTest implements ApplicationContextAware {
 	queueDao.save(queue);
 
 	final Queue first = queueDao.getFirst(queue.getQueueType());
-	assertEquals("not first row was returned", 2, first
+	assertEquals("not first row was returned", 1, first
 		.getRequiredPaymentCount().intValue());
 
     }
 
+    @Test
     public void shouldSwapPositions() {
 	queueDao.deleteAll();
 	initQueue();
 	queueDao.save(queue);
-	final Queue q = new Queue();
+	queueDao.refresh(queue);
+	final Integer position = queue.getPosition();
 
+	final Queue q = new Queue();
 	q.setAccount(createTestAccount2());
 	queueDao.save(q);
+	queueDao.refresh(q);
 	queueDao.switchPositions(queue, q);
+	final Queue actual = queueDao.findById(q.getId());
 	assertEquals("Value of first queue wasn't changed",
-		ActivationStatus.PENDING, queue.getAccount().getStatus());
+		position.intValue(), actual.getPosition().intValue());
 
     }
 
@@ -156,6 +159,7 @@ public class BasicQueueOperationsTest implements ApplicationContextAware {
 	queue.setQueueType("C500");
 	queue.setRequiredPaymentCount(1);
 	queue.setAccount(createTestAccount());
+
     }
 
     private Account createTestAccount() {

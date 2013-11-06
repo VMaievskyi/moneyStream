@@ -15,4 +15,6 @@ public interface QueueDao extends GenericDao<Queue> {
 
     List<Queue> findAllRange(int istartIndex, int countToReturn);
 
+    void refresh(Queue queue);
+
 }

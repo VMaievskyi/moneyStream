@@ -36,6 +36,7 @@ public class Account implements UserDetails {
     private String activationString;
     private Set<Queue> queues = new HashSet<Queue>();
     private Set<Wallet> wallets = new HashSet<Wallet>();
+    private Set<PendingQueue> pendingQueues = new HashSet<PendingQueue>();
     private String role;
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -95,6 +96,15 @@ public class Account implements UserDetails {
 
     public void setWallets(final Set<Wallet> wallets) {
 	this.wallets = wallets;
+    }
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pendingQueueOwner", cascade = CascadeType.ALL)
+    public Set<PendingQueue> getPendingQueues() {
+	return pendingQueues;
+    }
+
+    public void setPendingQueues(final Set<PendingQueue> pendingQueues) {
+	this.pendingQueues = pendingQueues;
     }
 
     public String getActivationString() {

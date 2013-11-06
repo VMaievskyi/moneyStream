@@ -7,8 +7,6 @@ import org.hibernate.Session;
 
 import com.piramida.dao.AbstractGenegicDao;
 import com.piramida.dao.queue.QueueDao;
-import com.piramida.entity.Account;
-import com.piramida.entity.ActivationStatus;
 import com.piramida.entity.Queue;
 
 public class DefaultQueueDao extends AbstractGenegicDao<Queue> implements
@@ -24,32 +22,25 @@ public class DefaultQueueDao extends AbstractGenegicDao<Queue> implements
     @Override
     public List<Queue> findAll() {
 	final Query allQueues = getSessionFactory().getCurrentSession()
-		.createQuery(findAll + " order by id");
+		.createQuery(findAll + " order by position");
 	return allQueues.list();
     }
 
     public void switchPositions(final Queue queue, final Queue secondRow) {
-	final Account tempPosition = queue.getAccount();
-	final Integer requiredPaymentCount = queue.getRequiredPaymentCount();
-
-	queue.setAccount(secondRow.getAccount());
-	queue.setRequiredPaymentCount(secondRow.getRequiredPaymentCount());
-
-	secondRow.setAccount(tempPosition);
+	final Integer position = queue.getPosition();
+	queue.setPosition(secondRow.getPosition());
+	secondRow.setPosition(position);
 
 	save(queue);
 	save(secondRow);
     }
 
     public Queue getFirst(final String queueType) {
-	final Query oneRowQuery = getSessionFactory()
-		.getCurrentSession()
+	final Query oneRowQuery = getSessionFactory().getCurrentSession()
 		.createQuery(
-			"from "
-				+ getEntityName()
-				+ " where queueType=:queueType and status=:status");
+			"from " + getEntityName()
+				+ " where queueType=:queueType");
 	oneRowQuery.setParameter("queueType", queueType);
-	oneRowQuery.setParameter("status", ActivationStatus.ACTIVE);
 	oneRowQuery.setMaxResults(ONE);
 	return (Queue) oneRowQuery.uniqueResult();
 

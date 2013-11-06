@@ -1,6 +1,10 @@
 package com.piramida.entity;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -9,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Queue {
@@ -17,6 +22,8 @@ public class Queue {
     private String queueType;
     private Account account;
     private Integer requiredPaymentCount;
+    private Integer position;
+    private Set<PendingQueue> pendingQueues = new HashSet<PendingQueue>();
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -27,6 +34,15 @@ public class Queue {
 
     public void setId(final Integer id) {
 	this.id = id;
+    }
+
+    @Column(name = "position")
+    public Integer getPosition() {
+	return position;
+    }
+
+    public void setPosition(final Integer position) {
+	this.position = position;
     }
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -55,6 +71,15 @@ public class Queue {
 
     public void setRequiredPaymentCount(final Integer requiredPaymentCount) {
 	this.requiredPaymentCount = requiredPaymentCount;
+    }
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "queue")
+    public Set<PendingQueue> getPendingQueues() {
+	return pendingQueues;
+    }
+
+    public void setPendingQueues(final Set<PendingQueue> pendingQueues) {
+	this.pendingQueues = pendingQueues;
     }
 
 }
