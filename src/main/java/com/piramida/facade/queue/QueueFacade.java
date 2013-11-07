@@ -1,9 +1,11 @@
 package com.piramida.facade.queue;
 
+import com.piramida.controller.exception.BusinessException;
 import com.piramida.entity.Account;
 
 public interface QueueFacade {
-    void putInQueue(final String queueType, Account account);
+    void putInQueue(final String queueType, Account account)
+	    throws BusinessException;
 
     void putInQueue(String queueType, final Integer accountId);
 

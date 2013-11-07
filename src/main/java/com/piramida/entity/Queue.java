@@ -7,6 +7,8 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,6 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 @Entity
 public class Queue {
@@ -24,6 +27,8 @@ public class Queue {
     private Integer requiredPaymentCount;
     private Integer position;
     private Set<PendingQueue> pendingQueues = new HashSet<PendingQueue>();
+    private PendingQueue garantedPendingQueue;
+    private ActivationStatus status;
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -80,6 +85,25 @@ public class Queue {
 
     public void setPendingQueues(final Set<PendingQueue> pendingQueues) {
 	this.pendingQueues = pendingQueues;
+    }
+
+    @OneToOne(mappedBy = "garantedQueue", cascade = CascadeType.ALL)
+    public PendingQueue getGarantedPendingQueue() {
+	return garantedPendingQueue;
+    }
+
+    public void setGarantedPendingQueue(final PendingQueue garantedPendingQueue) {
+	this.garantedPendingQueue = garantedPendingQueue;
+    }
+
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    public ActivationStatus getStatus() {
+	return status;
+    }
+
+    public void setStatus(final ActivationStatus status) {
+	this.status = status;
     }
 
 }

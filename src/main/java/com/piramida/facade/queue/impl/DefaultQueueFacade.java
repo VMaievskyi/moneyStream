@@ -3,7 +3,10 @@ package com.piramida.facade.queue.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
+import com.piramida.controller.exception.BusinessException;
 import com.piramida.entity.Account;
+import com.piramida.entity.ActivationStatus;
+import com.piramida.entity.PendingQueue;
 import com.piramida.entity.Queue;
 import com.piramida.entity.QueueType;
 import com.piramida.entity.QueueTypeHolder;
@@ -22,9 +25,12 @@ public class DefaultQueueFacade implements QueueFacade {
     @Qualifier("accountService")
     private AccountService accountService;
 
-    public void putInQueue(final String queueType, final Account account) {
+    public void putInQueue(final String queueType, final Account account)
+	    throws BusinessException {
 	final Queue queue = prepareQueueForInsert(queueType);
 	queue.setAccount(account);
+	queue.setStatus(ActivationStatus.PENDING);
+	putInRowAndLinkQueues(queueType, account, queue);
 	getQueueService().putInQueue(queue);
     }
 
@@ -66,6 +72,14 @@ public class DefaultQueueFacade implements QueueFacade {
 	    getQueueService().switchPositions(byId1, byId2);
 	}
 
+    }
+
+    private void putInRowAndLinkQueues(final String queueType,
+	    final Account account, final Queue queue) throws BusinessException {
+	final PendingQueue garantedPendingQueue = queueService
+		.increaseFirstRowPaymentCount(queueType, account);
+	queue.setGarantedPendingQueue(garantedPendingQueue);
+	garantedPendingQueue.setGarantedQueue(queue);
     }
 
     protected Queue createBlankQueue() {

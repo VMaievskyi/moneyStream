@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.piramida.controller.exception.BusinessException;
 import com.piramida.entity.Account;
 import com.piramida.entity.dto.MessageDto;
 import com.piramida.facade.queue.QueueFacade;
@@ -25,7 +26,8 @@ public class QueueController {
     @RequestMapping(method = RequestMethod.PUT)
     @ResponseBody
     public MessageDto putInQueue(
-	    @RequestParam(required = true) final String queueType) {
+	    @RequestParam(required = true) final String queueType)
+	    throws BusinessException {
 	queueFacade.putInQueue(queueType, getPrincipal());
 	return new MessageDto("queue.put.in");
     }

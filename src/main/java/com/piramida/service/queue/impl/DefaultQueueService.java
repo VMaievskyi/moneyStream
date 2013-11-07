@@ -8,7 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.piramida.controller.exception.BusinessException;
 import com.piramida.dao.queue.QueueDao;
+import com.piramida.entity.Account;
+import com.piramida.entity.ActivationStatus;
+import com.piramida.entity.PendingQueue;
 import com.piramida.entity.Queue;
 import com.piramida.service.queue.QueueService;
 
@@ -51,9 +55,18 @@ public class DefaultQueueService implements QueueService {
     }
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
-    public void increaseFirstRowPaymentCount(final String queueType) {
+    public PendingQueue increaseFirstRowPaymentCount(final String queueType,
+	    final Account account) throws BusinessException {
 	final Queue first = queueDao.getFirst(queueType);
-	queueDao.delete(first);
+	if (first.getPendingQueues().size() < first.getRequiredPaymentCount()) {
+	    final PendingQueue pendingQueueRecord = createPendingQueueRecord(
+		    account, first);
+	    first.getPendingQueues().add(pendingQueueRecord);
+	    return pendingQueueRecord;
+	}
+	throw new BusinessException(
+		"get first method returns record filled with candidates");
+
     }
 
     @Transactional
@@ -74,6 +87,15 @@ public class DefaultQueueService implements QueueService {
 
     public void setQueueDao(final QueueDao queueDao) {
 	this.queueDao = queueDao;
+    }
+
+    private PendingQueue createPendingQueueRecord(final Account account,
+	    final Queue queue) {
+	final PendingQueue pendingQueue = new PendingQueue();
+	pendingQueue.setPendingQueueOwner(account);
+	pendingQueue.setStatus(ActivationStatus.PENDING);
+	pendingQueue.setQueue(queue);
+	return pendingQueue;
     }
 
 }

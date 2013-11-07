@@ -10,6 +10,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 
+import com.piramida.controller.exception.BusinessException;
 import com.piramida.entity.Account;
 import com.piramida.entity.Queue;
 import com.piramida.entity.QueueType;
@@ -53,7 +54,7 @@ public class QueueFacadeTest {
 
     @Ignore
     @Test
-    public void shouldPutInQueue() {
+    public void shouldPutInQueue() throws BusinessException {
 	testInstance.putInQueue(QUEUE_TYPE, new Account());
 	verify(queue).setQueueType(QUEUE_TYPE);
 	verify(queue).setRequiredPaymentCount(REQUIRED_PAYMENT_COUNT);

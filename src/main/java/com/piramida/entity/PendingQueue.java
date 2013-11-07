@@ -12,6 +12,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -23,6 +25,7 @@ public class PendingQueue {
     private Date creationDate;
     private Account pendingQueueOwner;
     private Queue queue;
+    private Queue garantedQueue;
 
     @Id
     @Column(name = "id")
@@ -73,6 +76,16 @@ public class PendingQueue {
 
     public void setQueue(final Queue queue) {
 	this.queue = queue;
+    }
+
+    @OneToOne
+    @PrimaryKeyJoinColumn(name = "GarantedQueue")
+    public Queue getGarantedQueue() {
+	return garantedQueue;
+    }
+
+    public void setGarantedQueue(final Queue garantedQueue) {
+	this.garantedQueue = garantedQueue;
     }
 
 }

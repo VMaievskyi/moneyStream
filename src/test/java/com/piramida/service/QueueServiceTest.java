@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import com.piramida.controller.exception.BusinessException;
 import com.piramida.dao.queue.QueueDao;
 import com.piramida.entity.Account;
 import com.piramida.entity.Queue;
@@ -67,24 +68,13 @@ public class QueueServiceTest {
     }
 
     @Test
-    public void shouldIncreasePaymentCount() {
+    public void shouldIncreasePaymentCount() throws BusinessException {
 	initTestQueue();
 	Mockito.when(queueDaoMock.getFirst(queue.getQueueType())).thenReturn(
 		queue);
-	testInstance.increaseFirstRowPaymentCount(queue.getQueueType());
+	testInstance.increaseFirstRowPaymentCount(queue.getQueueType(),
+		new Account());
 	verify(queueDaoMock).getFirst(queue.getQueueType());
-    }
-
-    @Test
-    public void shouldRemoveFirstWhenPayedOff() {
-	initTestQueue();
-
-	final int oneStepFromPayOff = REQUIRED_PAYMENT_COUNT - 1;
-	Mockito.when(queueDaoMock.getFirst(queue.getQueueType())).thenReturn(
-		queue);
-	testInstance.increaseFirstRowPaymentCount(queue.getQueueType());
-	verify(queueDaoMock).getFirst(queue.getQueueType());
-	verify(queueDaoMock).delete(queue);
     }
 
     @Test

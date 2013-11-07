@@ -57,9 +57,8 @@ CREATE  TABLE IF NOT EXISTS `hibnatedb`.`Queue` (
   `id` INT NOT NULL AUTO_INCREMENT ,
   `queueType` VARCHAR(45) NULL ,
   `Account_id` INT NOT NULL ,
-  `status` VARCHAR(45) NULL ,
-  `paymentCount` INT NULL DEFAULT 0 ,
   `requiredPaymentCount` INT NULL ,
+  `position` INT NULL ,
   PRIMARY KEY (`id`, `Account_id`) ,
   INDEX `fk_Queue_Account1` (`Account_id` ASC) ,
   CONSTRAINT `fk_Queue_Account1`
@@ -71,6 +70,70 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
 
+
+-- -----------------------------------------------------
+-- Table `hibnatedb`.`PendingQueue`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `hibnatedb`.`PendingQueue` ;
+
+CREATE  TABLE IF NOT EXISTS `hibnatedb`.`PendingQueue` (
+  `id` INT NOT NULL AUTO_INCREMENT ,
+  `creationDate` DATE NULL ,
+  `status` VARCHAR(45) NULL ,
+  `Queue_id` INT NOT NULL ,
+  `Account_id` INT NOT NULL ,
+  `GarantedQueue` INT NOT NULL ,
+  PRIMARY KEY (`id`, `Queue_id`, `Account_id`, `GarantedQueue`) ,
+  INDEX `fk_PendingQueue_Queue1` (`Queue_id` ASC) ,
+  INDEX `fk_PendingQueue_Account1` (`Account_id` ASC) ,
+  INDEX `fk_PendingQueue_Queue2` (`GarantedQueue` ASC) ,
+  CONSTRAINT `fk_PendingQueue_Queue1`
+    FOREIGN KEY (`Queue_id` )
+    REFERENCES `hibnatedb`.`Queue` (`id` )
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_PendingQueue_Account1`
+    FOREIGN KEY (`Account_id` )
+    REFERENCES `hibnatedb`.`Account` (`id` )
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_PendingQueue_Queue2`
+    FOREIGN KEY (`GarantedQueue` )
+    REFERENCES `hibnatedb`.`Queue` (`id` )
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_unicode_ci;
+
+USE `hibnatedb`;
+
+DELIMITER $$
+
+USE `hibnatedb`$$
+DROP TRIGGER IF EXISTS `hibnatedb`.`sort_num_trigger` $$
+USE `hibnatedb`$$
+
+
+CREATE TRIGGER sort_num_trigger
+BEFORE INSERT ON Queue
+FOR EACH ROW BEGIN
+    DECLARE auto_inc INT;
+    IF (NEW.position  is null) THEN
+         -- determine next auto_increment value
+        SELECT AUTO_INCREMENT INTO auto_inc FROM information_schema.TABLES
+        WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME = 'Queue';
+        -- and set the sort value to the same as the PK
+        SET NEW.position = auto_inc;
+    END IF;
+END
+
+
+
+$$
+
+
+DELIMITER ;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
@@ -100,6 +163,6 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `hibnatedb`;
-INSERT INTO `hibnatedb`.`Queue` (`id`, `queueType`, `Account_id`, `status`, `paymentCount`, `requiredPaymentCount`) VALUES (1, '1', 1, 'new', NULL, NULL);
+INSERT INTO `hibnatedb`.`Queue` (`id`, `queueType`, `Account_id`, `requiredPaymentCount`, `position`) VALUES (1, '1', 1, NULL, NULL);
 
 COMMIT;

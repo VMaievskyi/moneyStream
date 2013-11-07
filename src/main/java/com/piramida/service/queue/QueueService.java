@@ -1,5 +1,8 @@
 package com.piramida.service.queue;
 
+import com.piramida.controller.exception.BusinessException;
+import com.piramida.entity.Account;
+import com.piramida.entity.PendingQueue;
 import com.piramida.entity.Queue;
 
 public interface QueueService {
@@ -12,7 +15,8 @@ public interface QueueService {
 
     Queue getFirst(String queueType);
 
-    void increaseFirstRowPaymentCount(String queueType);
+    PendingQueue increaseFirstRowPaymentCount(String queueType, Account account)
+	    throws BusinessException;
 
     Queue findById(final int i);
 }
