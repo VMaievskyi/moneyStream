@@ -15,7 +15,7 @@ import com.piramida.entity.Account;
 import com.piramida.entity.Queue;
 import com.piramida.entity.QueueType;
 import com.piramida.entity.QueueTypeHolder;
-import com.piramida.facade.queue.impl.DefaultQueueFacade;
+import com.piramida.facade.queue.impl.QueueFacadeImpl;
 import com.piramida.service.queue.QueueService;
 
 public class QueueFacadeTest {
@@ -28,7 +28,7 @@ public class QueueFacadeTest {
     @Mock
     private Queue queue;
     @Spy
-    private final DefaultQueueFacade testInstance = new DefaultQueueFacade() {
+    private final QueueFacadeImpl testInstance = new QueueFacadeImpl() {
 	@Override
 	protected Queue createBlankQueue() {
 	    return queue;

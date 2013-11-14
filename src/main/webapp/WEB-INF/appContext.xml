@@ -26,13 +26,14 @@
 	<bean name="abstractDtoEntityMapper" class="com.piramida.entity.mapper.impl.AbstractDtoEntityMapper" abstract="true" />
 	<bean name="accountDtoEntityMapper" class="com.piramida.entity.mapper.impl.AccountDtoEntityMapper" parent="abstractDtoEntityMapper" />
 	<bean name="walletDtoEntityMapper" class="com.piramida.entity.mapper.impl.WalletDtoEntityMapper" parent="abstractDtoEntityMapper" />
-
+	<bean name="walletDtoListEntityMapper" class="com.piramida.entity.mapper.impl.WalletDtoListEntityMapper" parent="abstractDtoEntityMapper"/>
 
 	<bean name="mappersRegistry" class="com.piramida.entity.mapper.factory.MappersRegistry">
 		<property name="registeregMaps">
 			<map>
 				<entry key="com.piramida.entity.dto.AccountDto" value-ref="accountDtoEntityMapper" />
 				<entry key="com.piramida.entity.dto.WalletDto" value-ref="walletDtoEntityMapper" />
+				<entry key="com.piramida.entity.dto.WalletDtoList" value-ref="walletDtoListEntityMapper" />
 			</map>
 		</property>
 	</bean>
@@ -80,16 +81,14 @@
 
 
 	<bean name="abstractDao" class="com.piramida.dao.AbstractGenegicDao" abstract="true" />
-	<bean name="accountDao" class="com.piramida.dao.account.impl.DefaultAccountDao" parent="abstractDao" />
-	<bean name="queueDao" class="com.piramida.dao.queue.impl.DefaultQueueDao" parent="abstractDao" />
+	<bean name="accountDao" class="com.piramida.dao.account.impl.AccountDaoImpl" parent="abstractDao" />
+	<bean name="queueDao" class="com.piramida.dao.queue.impl.QueueDaoImpl" parent="abstractDao" />
 
-	<bean name="accountService" class="com.piramida.service.account.impl.DefaultAccountService" />
-	<bean name="queueService"  class="com.piramida.service.queue.impl.DefaultQueueService"/>
 	
 	<bean name="securityStringGenerator" class="com.piramida.service.security.impl.SecurityStringGeneratorService" />
 	<bean name="passwordGeneratorService" class="com.piramida.service.security.impl.PasswordGeneratorService" />
 
-	<bean name="mailService" class="com.piramida.service.mail.impl.DefaultMailService" />
+	<bean name="mailService" class="com.piramida.service.mail.impl.MailServiceImpl" />
 
 	<bean id="templateMessage" class="org.springframework.mail.SimpleMailMessage">
 		<property name="from">
@@ -121,13 +120,12 @@
         </property>
 	</bean>
 
-	<bean name="accountFacade" class="com.piramida.facade.impl.DefaultAccountFacade">
+	<bean name="accountFacade" class="com.piramida.facade.account.impl.AccountFacadeImpl">
 		<property name="accountService" ref="accountService" />
 		<property name="hashGeneratorService" ref="securityStringGenerator" />
 		<property name="mailService" ref="mailService" />
 	</bean>
 	
-	<bean name="queueFacade" class="com.piramida.facade.queue.impl.DefaultQueueFacade" />
 
 
 </beans>

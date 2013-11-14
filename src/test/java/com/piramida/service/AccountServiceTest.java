@@ -13,7 +13,7 @@ import org.mockito.MockitoAnnotations;
 import com.piramida.dao.account.AccountDao;
 import com.piramida.entity.Account;
 import com.piramida.entity.ActivationStatus;
-import com.piramida.service.account.impl.DefaultAccountService;
+import com.piramida.service.account.impl.AccountServiceImpl;
 
 public class AccountServiceTest {
 
@@ -26,13 +26,13 @@ public class AccountServiceTest {
     @Mock
     private AccountDao accountDaoMock;
 
-    private DefaultAccountService testInstance;
+    private AccountServiceImpl testInstance;
     private Account account;
 
     @Before
     public void setUp() {
 	MockitoAnnotations.initMocks(this);
-	testInstance = new DefaultAccountService();
+	testInstance = new AccountServiceImpl();
 	testInstance.setAccountDao(accountDaoMock);
 
 	initAccountModel();

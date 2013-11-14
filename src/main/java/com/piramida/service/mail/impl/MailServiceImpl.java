@@ -9,7 +9,7 @@ import com.piramida.entity.Account;
 import com.piramida.entity.EmailType;
 import com.piramida.service.mail.MailService;
 
-public class DefaultMailService implements MailService {
+public class MailServiceImpl implements MailService {
 
     @Autowired
     @Qualifier("mailSender")

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.piramida.controller.exception.AccountOperationException;
 import com.piramida.entity.dto.AccountDto;
-import com.piramida.facade.AccountFacade;
+import com.piramida.facade.account.AccountFacade;
 
 @Controller
 @RequestMapping(value = "/account")
@@ -23,7 +23,6 @@ public class AccountController {
     public void activateAccount(@PathVariable final String activationString)
 	    throws AccountOperationException {
 	accountFacade.activateAccount(activationString);
-
     }
 
     @RequestMapping(value = "/new", method = RequestMethod.POST)

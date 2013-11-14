@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.piramida.dao.account.AccountDao;
@@ -11,19 +12,22 @@ import com.piramida.entity.Account;
 import com.piramida.entity.ActivationStatus;
 import com.piramida.service.account.AccountService;
 
-public class DefaultAccountService implements AccountService {
+@Service(value = "accountService")
+public class AccountServiceImpl implements AccountService {
 
     private static Logger LOG = LoggerFactory
-	    .getLogger(DefaultAccountService.class);
+	    .getLogger(AccountServiceImpl.class);
 
     @Autowired
     private AccountDao accountDao;
 
+    @Override
     @Transactional
     public Account findById(final Integer accountId) {
 	return accountDao.findById(accountId);
     }
 
+    @Override
     @Transactional
     public void createUserAccount(final Account account) {
 	saveAccount(account);
@@ -32,6 +36,7 @@ public class DefaultAccountService implements AccountService {
 	}
     }
 
+    @Override
     @Transactional
     public void updateUserAccount(final Account account) {
 	saveAccount(account);
@@ -41,6 +46,7 @@ public class DefaultAccountService implements AccountService {
     }
 
     // TODO: Throw exception if account not found
+    @Override
     @Transactional
     public void activateUserAccount(final String userActivationString) {
 	final Account unactivatedAccount = accountDao
@@ -58,6 +64,7 @@ public class DefaultAccountService implements AccountService {
 	}
     }
 
+    @Override
     @Transactional
     public void deactivateAccount(final Account account) {
 	if (account.getStatus() == ActivationStatus.ACTIVE) {
@@ -69,6 +76,7 @@ public class DefaultAccountService implements AccountService {
 	}
     }
 
+    @Override
     @Transactional
     public Account findByEmail(final String email) {
 	return accountDao.findByEmail(email);

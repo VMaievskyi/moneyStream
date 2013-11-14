@@ -1,4 +1,4 @@
-package com.piramida.facade;
+package com.piramida.facade.account;
 
 import com.piramida.entity.Account;
 import com.piramida.entity.dto.AccountDto;

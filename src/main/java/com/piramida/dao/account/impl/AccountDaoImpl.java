@@ -10,9 +10,10 @@ import com.piramida.dao.account.AccountDao;
 import com.piramida.entity.Account;
 import com.piramida.entity.Wallet;
 
-public class DefaultAccountDao extends AbstractGenegicDao<Account> implements
+public class AccountDaoImpl extends AbstractGenegicDao<Account> implements
 	AccountDao {
 
+    @Override
     public Account findByEmail(final String email) {
 	final Session currentSession = getSessionFactory().getCurrentSession();
 	final Query searchQuery = currentSession
@@ -36,6 +37,7 @@ public class DefaultAccountDao extends AbstractGenegicDao<Account> implements
 	return "Account";
     }
 
+    @Override
     public Account findByActivationString(final String activationString) {
 	final Session currentSession = getSessionFactory().getCurrentSession();
 	return (Account) currentSession.createQuery(

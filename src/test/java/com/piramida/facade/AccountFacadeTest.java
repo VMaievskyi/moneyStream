@@ -15,7 +15,7 @@ import com.piramida.entity.EmailType;
 import com.piramida.entity.dto.AccountDto;
 import com.piramida.entity.mapper.factory.MapperFactory;
 import com.piramida.entity.mapper.impl.AbstractDtoEntityMapper;
-import com.piramida.facade.impl.DefaultAccountFacade;
+import com.piramida.facade.account.impl.AccountFacadeImpl;
 import com.piramida.service.account.AccountService;
 import com.piramida.service.mail.MailService;
 import com.piramida.service.security.HashGeneratorService;
@@ -25,7 +25,7 @@ public class AccountFacadeTest {
     private static final String PASSWORD = "password";
     private static final String EMAIL = "email";
     private static final String ACTIVATE_USER_STRING = "activateUserString";
-    private DefaultAccountFacade testInstance;
+    private AccountFacadeImpl testInstance;
     @Mock
     private AccountService accountServiceMock;
     @Mock
@@ -42,7 +42,7 @@ public class AccountFacadeTest {
     @Before
     public void setUp() {
 	MockitoAnnotations.initMocks(this);
-	testInstance = new DefaultAccountFacade();
+	testInstance = new AccountFacadeImpl();
 	testInstance.setAccountService(accountServiceMock);
 	testInstance.setHashGeneratorService(hashGeneratorServiceMock);
 	testInstance.setMailService(mailServiceMock);

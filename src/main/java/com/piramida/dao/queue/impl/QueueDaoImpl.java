@@ -9,7 +9,7 @@ import com.piramida.dao.AbstractGenegicDao;
 import com.piramida.dao.queue.QueueDao;
 import com.piramida.entity.Queue;
 
-public class DefaultQueueDao extends AbstractGenegicDao<Queue> implements
+public class QueueDaoImpl extends AbstractGenegicDao<Queue> implements
 	QueueDao {
 
     private static final int ONE = 1;
