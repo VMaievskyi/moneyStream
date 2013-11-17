@@ -27,6 +27,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Table(name = "Account", schema = "", catalog = "hibnatedb")
 @Entity
 public class Account implements UserDetails {
+
     private Integer id;
     @NotEmpty
     private String email;
@@ -60,6 +61,7 @@ public class Account implements UserDetails {
 	this.email = email;
     }
 
+    @Override
     @Column(name = "password")
     @Basic
     public String getPassword() {
@@ -135,28 +137,24 @@ public class Account implements UserDetails {
     @Transient
     @Override
     public String getUsername() {
-	// TODO Auto-generated method stub
 	return getEmail();
     }
 
     @Transient
     @Override
     public boolean isAccountNonExpired() {
-	// TODO Auto-generated method stub
 	return true;
     }
 
     @Transient
     @Override
     public boolean isAccountNonLocked() {
-	// TODO Auto-generated method stub
 	return true;
     }
 
     @Transient
     @Override
     public boolean isCredentialsNonExpired() {
-	// TODO Auto-generated method stub
 	return true;
     }
 

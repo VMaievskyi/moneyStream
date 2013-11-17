@@ -45,7 +45,6 @@ public class AccountServiceImpl implements AccountService {
 	}
     }
 
-    // TODO: Throw exception if account not found
     @Override
     @Transactional
     public void activateUserAccount(final String userActivationString) {

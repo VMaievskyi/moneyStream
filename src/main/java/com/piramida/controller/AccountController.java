@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.piramida.controller.exception.AccountOperationException;
 import com.piramida.entity.dto.AccountDto;
+import com.piramida.entity.dto.MessageDto;
 import com.piramida.facade.account.AccountFacade;
 
 @Controller
@@ -19,10 +20,13 @@ public class AccountController {
     @Autowired
     private AccountFacade accountFacade;
 
+    @ResponseBody
     @RequestMapping(value = "/activation/{activationString}")
-    public void activateAccount(@PathVariable final String activationString)
+    public MessageDto activateAccount(
+	    @PathVariable final String activationString)
 	    throws AccountOperationException {
 	accountFacade.activateAccount(activationString);
+	return new MessageDto("account.activated");
     }
 
     @RequestMapping(value = "/new", method = RequestMethod.POST)

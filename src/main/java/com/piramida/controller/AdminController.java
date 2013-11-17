@@ -13,7 +13,6 @@ import com.piramida.facade.queue.QueueFacade;
 
 @Controller
 @RequestMapping("/admin")
-@Secured("ROLE_ADMIN")
 public class AdminController {
 
     @Autowired

@@ -48,6 +48,7 @@ public class QueueServiceImpl implements QueueService {
 	return queueDao;
     }
 
+    // TODO: handle when no first result available
     @Override
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public PendingQueue increaseFirstRowPaymentCount(final String queueType,

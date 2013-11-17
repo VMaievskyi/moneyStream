@@ -15,7 +15,7 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
 
 
-	<bean name="c500" class="com.piramida.entity.QueueType">
+	<bean name="C500" class="com.piramida.entity.QueueType">
 		<property name="numberOfVisiblePositions" value="10" />
 		<property name="requiredPaymentCount" value="2" />
 		<property name="sumToPay" value="500" />
@@ -25,7 +25,7 @@
 	<bean name="queueTypeHolder" class="com.piramida.entity.QueueTypeHolder">
 		<property name="queueTypes">
 			<map>
-				<entry key="c500" value-ref="c500" />
+				<entry key="C500" value-ref="C500" />
 			</map>
 		</property>
 

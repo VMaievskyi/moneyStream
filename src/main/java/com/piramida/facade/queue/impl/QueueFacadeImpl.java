@@ -2,6 +2,7 @@ package com.piramida.facade.queue.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.piramida.controller.exception.BusinessException;
@@ -35,12 +36,13 @@ public class QueueFacadeImpl implements QueueFacade {
     }
 
     @Override
-    public void putInQueue(final String queueType, final Account account)
-	    throws BusinessException {
+    public void putInQueue(final String queueType) throws BusinessException {
 	final Queue queue = prepareQueueRecordForInsert(queueType);
-	queue.setAccount(account);
 	queue.setStatus(ActivationStatus.PENDING);
+	final Account account = (Account) SecurityContextHolder.getContext()
+		.getAuthentication().getPrincipal();
 	putInRowAndLinkQueues(queueType, account, queue);
+	// TODO: Generate image code.
 	getQueueService().putInQueue(queue);
     }
 
@@ -50,6 +52,7 @@ public class QueueFacadeImpl implements QueueFacade {
 	if (accountById != null) {
 	    final Queue queue = prepareQueueRecordForInsert(queueType);
 	    queue.setAccount(accountById);
+	    queue.setStatus(ActivationStatus.ACTIVE);
 	    getQueueService().putInQueue(queue);
 	}
     }
@@ -105,6 +108,14 @@ public class QueueFacadeImpl implements QueueFacade {
 	return queue;
     }
 
+    /**
+     * Pust record in queue and links garanted queue with queue
+     * 
+     * @param queueType
+     * @param account
+     * @param queue
+     * @throws BusinessException
+     */
     private void putInRowAndLinkQueues(final String queueType,
 	    final Account account, final Queue queue) throws BusinessException {
 	final PendingQueue garantedPendingQueue = queueService
