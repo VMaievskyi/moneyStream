@@ -9,8 +9,7 @@ import com.piramida.dao.AbstractGenegicDao;
 import com.piramida.dao.queue.QueueDao;
 import com.piramida.entity.Queue;
 
-public class QueueDaoImpl extends AbstractGenegicDao<Queue> implements
-	QueueDao {
+public class QueueDaoImpl extends AbstractGenegicDao<Queue> implements QueueDao {
 
     private static final int ONE = 1;
 
@@ -26,6 +25,7 @@ public class QueueDaoImpl extends AbstractGenegicDao<Queue> implements
 	return allQueues.list();
     }
 
+    @Override
     public void switchPositions(final Queue queue, final Queue secondRow) {
 	final Integer position = queue.getPosition();
 	queue.setPosition(secondRow.getPosition());
@@ -35,17 +35,21 @@ public class QueueDaoImpl extends AbstractGenegicDao<Queue> implements
 	save(secondRow);
     }
 
+    @Override
     public Queue getFirst(final String queueType) {
-	final Query oneRowQuery = getSessionFactory().getCurrentSession()
+	final Query oneRowQuery = getSessionFactory()
+		.getCurrentSession()
 		.createQuery(
-			"from " + getEntityName()
-				+ " where queueType=:queueType");
+			"from "
+				+ getEntityName()
+				+ " as e where queueType=:queueType and e.pendingQueues.size < e.requiredPaymentCount");
 	oneRowQuery.setParameter("queueType", queueType);
 	oneRowQuery.setMaxResults(ONE);
 	return (Queue) oneRowQuery.uniqueResult();
 
     }
 
+    @Override
     public Queue findById(final Integer id) {
 	final Session currentSession = getSessionFactory().getCurrentSession();
 	final Query byIdQuery = currentSession
@@ -54,6 +58,7 @@ public class QueueDaoImpl extends AbstractGenegicDao<Queue> implements
 	return (Queue) byIdQuery.uniqueResult();
     }
 
+    @Override
     public List<Queue> findAllRange(final int istartIndex,
 	    final int countToReturn) {
 	final Session currentSession = getSessionFactory().getCurrentSession();
