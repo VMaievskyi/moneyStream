@@ -20,6 +20,7 @@ import javax.persistence.OneToOne;
 
 @Entity
 public class Queue {
+
     private Integer id;
 
     private String queueType;

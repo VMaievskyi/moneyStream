@@ -15,8 +15,9 @@ public interface QueueService {
 
     Queue getFirst(String queueType);
 
-    PendingQueue increaseFirstRowPaymentCount(String queueType, Account account)
-	    throws BusinessException;
+    PendingQueue placeNewQueueRecord(String queueType, Account account,
+	    Queue queueForInsert) throws BusinessException;
 
     Queue findById(final int i);
+
 }

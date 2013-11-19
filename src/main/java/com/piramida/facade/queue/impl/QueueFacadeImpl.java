@@ -41,9 +41,12 @@ public class QueueFacadeImpl implements QueueFacade {
 	queue.setStatus(ActivationStatus.PENDING);
 	final Account account = (Account) SecurityContextHolder.getContext()
 		.getAuthentication().getPrincipal();
-	putInRowAndLinkQueues(queueType, account, queue);
-	// TODO: Generate image code.
-	getQueueService().putInQueue(queue);
+	queue.setAccount(account);
+	final Queue queueForInsert = createQueueForInsert(queueType, account);
+
+	final PendingQueue queueRecord = queueService.placeNewQueueRecord(
+		queueType, account, queueForInsert);
+	// TODO: GENERATE LINK
     }
 
     @Override
@@ -108,19 +111,19 @@ public class QueueFacadeImpl implements QueueFacade {
 	return queue;
     }
 
-    /**
-     * Pust record in queue and links garanted queue with queue
-     * 
-     * @param queueType
-     * @param account
-     * @param queue
-     * @throws BusinessException
-     */
-    private void putInRowAndLinkQueues(final String queueType,
-	    final Account account, final Queue queue) throws BusinessException {
-	final PendingQueue garantedPendingQueue = queueService
-		.increaseFirstRowPaymentCount(queueType, account);
-	queue.setGarantedPendingQueue(garantedPendingQueue);
-	garantedPendingQueue.setGarantedQueue(queue);
+    private Queue createQueueForInsert(final String queueType,
+	    final Account account) throws BusinessException {
+	final Queue queue = new Queue();
+	final QueueType queueTypeByName = queueTypeHolder
+		.getQueuTypeByName(queueType);
+	if (queueTypeByName == null) {
+	    throw new BusinessException("queue.invalidType");
+	}
+	queue.setAccount(account);
+	queue.setQueueType(queueType);
+	queue.setRequiredPaymentCount(queueTypeByName.getRequiredPaymentCount());
+	queue.setStatus(ActivationStatus.PENDING);
+	return queue;
     }
+
 }

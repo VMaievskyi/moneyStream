@@ -18,12 +18,14 @@ public class MailServiceImpl implements MailService {
     @Qualifier("templateMessage")
     private SimpleMailMessage simpleMailMessage;
 
+    @Override
     public void sendEmail(final EmailType emailType, final Account account) {
 
 	simpleMailMessage.setTo(account.getEmail());
 	simpleMailMessage.setSubject("activateion");
-	simpleMailMessage.setText("please folow: "
-		+ account.getActivationString());
+	simpleMailMessage
+		.setText("please folow: http://localhost:8080/moneyStream-0.0.1-SNAPSHOT/account/activation/"
+			+ account.getActivationString());
 	mailSender.send(simpleMailMessage);
     }
 

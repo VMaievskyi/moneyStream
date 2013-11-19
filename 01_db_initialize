@@ -1,6 +1,6 @@
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
-SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 
 DROP SCHEMA IF EXISTS `hibnatedb` ;
 CREATE SCHEMA IF NOT EXISTS `hibnatedb` DEFAULT CHARACTER SET utf8 ;
@@ -11,15 +11,15 @@ USE `hibnatedb` ;
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `hibnatedb`.`Account` ;
 
-CREATE  TABLE IF NOT EXISTS `hibnatedb`.`Account` (
-  `id` INT NOT NULL AUTO_INCREMENT ,
-  `email` VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NULL ,
-  `password` VARCHAR(255) NULL ,
-  `status` VARCHAR(50) NULL ,
-  `activationString` VARCHAR(75) NULL ,
-  `role` VARCHAR(45) NULL DEFAULT 'User' ,
-  PRIMARY KEY (`id`) ,
-  UNIQUE INDEX `email_UNIQUE` (`email` ASC) )
+CREATE TABLE IF NOT EXISTS `hibnatedb`.`Account` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `email` VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NULL,
+  `password` VARCHAR(255) NULL,
+  `status` VARCHAR(50) NULL,
+  `activationString` VARCHAR(75) NULL,
+  `role` VARCHAR(45) NULL DEFAULT 'User',
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `email_UNIQUE` (`email` ASC))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci
@@ -31,16 +31,16 @@ COMMENT = 'table for users';
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `hibnatedb`.`Wallet` ;
 
-CREATE  TABLE IF NOT EXISTS `hibnatedb`.`Wallet` (
-  `id` INT NOT NULL AUTO_INCREMENT ,
-  `walletType` VARCHAR(255) NULL ,
-  `waletNumber` VARCHAR(255) NULL ,
-  `owner` INT NOT NULL ,
-  PRIMARY KEY (`id`, `owner`) ,
-  INDEX `fk_wallet_account` (`owner` ASC) ,
+CREATE TABLE IF NOT EXISTS `hibnatedb`.`Wallet` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `walletType` VARCHAR(255) NULL,
+  `waletNumber` VARCHAR(255) NULL,
+  `owner` INT NOT NULL,
+  PRIMARY KEY (`id`, `owner`),
+  INDEX `fk_wallet_account` (`owner` ASC),
   CONSTRAINT `fk_wallets_users`
-    FOREIGN KEY (`owner` )
-    REFERENCES `hibnatedb`.`Account` (`id` )
+    FOREIGN KEY (`owner`)
+    REFERENCES `hibnatedb`.`Account` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB
@@ -53,17 +53,18 @@ COLLATE = utf8_general_ci;
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `hibnatedb`.`Queue` ;
 
-CREATE  TABLE IF NOT EXISTS `hibnatedb`.`Queue` (
-  `id` INT NOT NULL AUTO_INCREMENT ,
-  `queueType` VARCHAR(45) NULL ,
-  `Account_id` INT NOT NULL ,
-  `requiredPaymentCount` INT NULL ,
-  `position` INT NULL ,
-  PRIMARY KEY (`id`, `Account_id`) ,
-  INDEX `fk_Queue_Account1` (`Account_id` ASC) ,
+CREATE TABLE IF NOT EXISTS `hibnatedb`.`Queue` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `queueType` VARCHAR(45) NULL,
+  `Account_id` INT NOT NULL,
+  `requiredPaymentCount` INT NULL,
+  `position` INT NULL,
+  `status` VARCHAR(45) NULL,
+  PRIMARY KEY (`id`, `Account_id`),
+  INDEX `fk_Queue_Account1_idx` (`Account_id` ASC),
   CONSTRAINT `fk_Queue_Account1`
-    FOREIGN KEY (`Account_id` )
-    REFERENCES `hibnatedb`.`Account` (`id` )
+    FOREIGN KEY (`Account_id`)
+    REFERENCES `hibnatedb`.`Account` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB
@@ -76,35 +77,69 @@ COLLATE = utf8_general_ci;
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `hibnatedb`.`PendingQueue` ;
 
-CREATE  TABLE IF NOT EXISTS `hibnatedb`.`PendingQueue` (
-  `id` INT NOT NULL AUTO_INCREMENT ,
-  `creationDate` DATE NULL ,
-  `status` VARCHAR(45) NULL ,
-  `Queue_id` INT NOT NULL ,
-  `Account_id` INT NOT NULL ,
-  `GarantedQueue` INT NOT NULL ,
-  PRIMARY KEY (`id`, `Queue_id`, `Account_id`, `GarantedQueue`) ,
-  INDEX `fk_PendingQueue_Queue1` (`Queue_id` ASC) ,
-  INDEX `fk_PendingQueue_Account1` (`Account_id` ASC) ,
-  INDEX `fk_PendingQueue_Queue2` (`GarantedQueue` ASC) ,
+CREATE TABLE IF NOT EXISTS `hibnatedb`.`PendingQueue` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `creationDate` DATE NULL,
+  `status` VARCHAR(45) NULL,
+  `Queue_id` INT NOT NULL,
+  `Account_id` INT NOT NULL,
+  `GarantedQueue` INT NULL,
+  PRIMARY KEY (`id`, `Queue_id`, `Account_id`),
+  INDEX `fk_PendingQueue_Queue1_idx` (`Queue_id` ASC),
+  INDEX `fk_PendingQueue_Account1_idx` (`Account_id` ASC),
+  INDEX `fk_PendingQueue_Queue2_idx` (`GarantedQueue` ASC),
   CONSTRAINT `fk_PendingQueue_Queue1`
-    FOREIGN KEY (`Queue_id` )
-    REFERENCES `hibnatedb`.`Queue` (`id` )
+    FOREIGN KEY (`Queue_id`)
+    REFERENCES `hibnatedb`.`Queue` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `fk_PendingQueue_Account1`
-    FOREIGN KEY (`Account_id` )
-    REFERENCES `hibnatedb`.`Account` (`id` )
+    FOREIGN KEY (`Account_id`)
+    REFERENCES `hibnatedb`.`Account` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `fk_PendingQueue_Queue2`
-    FOREIGN KEY (`GarantedQueue` )
-    REFERENCES `hibnatedb`.`Queue` (`id` )
+    FOREIGN KEY (`GarantedQueue`)
+    REFERENCES `hibnatedb`.`Queue` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_unicode_ci;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+-- -----------------------------------------------------
+-- Data for table `hibnatedb`.`Account`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `hibnatedb`;
+INSERT INTO `hibnatedb`.`Account` (`id`, `email`, `password`, `status`, `activationString`, `role`) VALUES (1, 'slava@mail.ru', '555666', 'active', NULL, NULL);
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `hibnatedb`.`Wallet`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `hibnatedb`;
+INSERT INTO `hibnatedb`.`Wallet` (`id`, `walletType`, `waletNumber`, `owner`) VALUES (1, 'qiwi', '12345678', 1);
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `hibnatedb`.`Queue`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `hibnatedb`;
+INSERT INTO `hibnatedb`.`Queue` (`id`, `queueType`, `Account_id`, `requiredPaymentCount`, `position`, `status`) VALUES (1, '1', 1, NULL, NULL, NULL);
+
+COMMIT;
 
 USE `hibnatedb`;
 
@@ -113,6 +148,7 @@ DELIMITER $$
 USE `hibnatedb`$$
 DROP TRIGGER IF EXISTS `hibnatedb`.`sort_num_trigger` $$
 USE `hibnatedb`$$
+
 
 
 CREATE TRIGGER sort_num_trigger
@@ -134,35 +170,3 @@ $$
 
 
 DELIMITER ;
-
-
-SET SQL_MODE=@OLD_SQL_MODE;
-SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
-SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
-
--- -----------------------------------------------------
--- Data for table `hibnatedb`.`Account`
--- -----------------------------------------------------
-START TRANSACTION;
-USE `hibnatedb`;
-INSERT INTO `hibnatedb`.`Account` (`id`, `email`, `password`, `status`, `activationString`, `role`) VALUES (1, 'slava@mail.ru', '555666', 'active', NULL, NULL);
-
-COMMIT;
-
--- -----------------------------------------------------
--- Data for table `hibnatedb`.`Wallet`
--- -----------------------------------------------------
-START TRANSACTION;
-USE `hibnatedb`;
-INSERT INTO `hibnatedb`.`Wallet` (`id`, `walletType`, `waletNumber`, `owner`) VALUES (1, 'qiwi', '12345678', 1);
-
-COMMIT;
-
--- -----------------------------------------------------
--- Data for table `hibnatedb`.`Queue`
--- -----------------------------------------------------
-START TRANSACTION;
-USE `hibnatedb`;
-INSERT INTO `hibnatedb`.`Queue` (`id`, `queueType`, `Account_id`, `requiredPaymentCount`, `position`) VALUES (1, '1', 1, NULL, NULL);
-
-COMMIT;

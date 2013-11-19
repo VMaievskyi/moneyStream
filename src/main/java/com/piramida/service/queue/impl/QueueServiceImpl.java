@@ -49,17 +49,23 @@ public class QueueServiceImpl implements QueueService {
     }
 
     // TODO: handle when no first result available
+    // TODO: Handle when first queue is filled with payment
     @Override
     @Transactional(isolation = Isolation.SERIALIZABLE)
-    public PendingQueue increaseFirstRowPaymentCount(final String queueType,
-	    final Account account) throws BusinessException {
+    public PendingQueue placeNewQueueRecord(final String queueType,
+	    final Account account, final Queue queueForInsert)
+	    throws BusinessException {
+
 	final Queue first = queueDao.getFirst(queueType);
 	if (first.getPendingQueues().size() < first.getRequiredPaymentCount()) {
 	    final PendingQueue pendingQueueRecord = createPendingQueueRecord(
 		    account, first);
 	    first.getPendingQueues().add(pendingQueueRecord);
 	    first.setStatus(ActivationStatus.PENDING);
+	    putInQueue(queueForInsert);
+	    linkPendingQueueWithNewQueue(pendingQueueRecord, queueForInsert);
 	    putInQueue(first);
+
 	    return pendingQueueRecord;
 	}
 	throw new BusinessException(
@@ -106,6 +112,13 @@ public class QueueServiceImpl implements QueueService {
 	pendingQueue.setStatus(ActivationStatus.PENDING);
 	pendingQueue.setQueue(queue);
 	return pendingQueue;
+    }
+
+    private void linkPendingQueueWithNewQueue(final PendingQueue queueRecord,
+	    final Queue queueForInsert) {
+
+	queueForInsert.setGarantedPendingQueue(queueRecord);
+	queueRecord.setGarantedQueue(queueForInsert);
     }
 
 }
