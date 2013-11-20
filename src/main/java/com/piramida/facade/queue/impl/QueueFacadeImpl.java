@@ -37,23 +37,32 @@ public class QueueFacadeImpl implements QueueFacade {
 
     @Override
     public void putInQueue(final String queueType) throws BusinessException {
-	final Queue queue = prepareQueueRecordForInsert(queueType);
-	queue.setStatus(ActivationStatus.PENDING);
-	final Account account = (Account) SecurityContextHolder.getContext()
-		.getAuthentication().getPrincipal();
-	queue.setAccount(account);
-	final Queue queueForInsert = createQueueForInsert(queueType, account);
+	final QueueType queueTypeVal = getQueueTypeByName(queueType);
 
-	final PendingQueue queueRecord = queueService.placeNewQueueRecord(
-		queueType, account, queueForInsert);
-	// TODO: GENERATE LINK
+	final Account account = getCurrentAccount();
+
+	final Queue first = queueService.getFirst(queueType);
+	if ((first != null) && checkIfQueueIspayedOff(first)) {
+	    final PendingQueue pendingQueue = queueService
+		    .placeRecordWithPaying(queueTypeVal, account, first);
+	    // TODO: GENERATE LINK
+	} else {
+	    // TODO: Handle when first queue is filled with payment
+	    queueService.placeNewQueueRecord(queueTypeVal, account);
+	}
+    }
+
+    private boolean checkIfQueueIspayedOff(final Queue first) {
+	return first.getPendingQueues().size() < first
+		.getRequiredPaymentCount();
     }
 
     @Override
     public void putInQueue(final String queueType, final Integer accountId) {
 	final Account accountById = accountService.findById(accountId);
 	if (accountById != null) {
-	    final Queue queue = prepareQueueRecordForInsert(queueType);
+	    final Queue queue = queueService
+		    .prepareQueueRecordForInsert(getQueueTypeByName(queueType));
 	    queue.setAccount(accountById);
 	    queue.setStatus(ActivationStatus.ACTIVE);
 	    getQueueService().putInQueue(queue);
@@ -88,42 +97,16 @@ public class QueueFacadeImpl implements QueueFacade {
 
     }
 
-    protected Queue createBlankQueue() {
-	return new Queue();
+    private Account getCurrentAccount() {
+	final Account account = (Account) SecurityContextHolder.getContext()
+		.getAuthentication().getPrincipal();
+	return account;
     }
 
-    /**
-     * Create record before insertion in queue record
-     * 
-     * @param queueType
-     * @return
-     */
-    private Queue prepareQueueRecordForInsert(final String queueType) {
+    private QueueType getQueueTypeByName(final String queueType) {
 	final QueueType queueTypeVal = getQueueTypeHolder().getQueuTypeByName(
 		queueType);
-	if (queueTypeVal == null) {
-	    throw new IllegalArgumentException("Unknown queue type");
-	}
-
-	final Queue queue = createBlankQueue();
-	queue.setQueueType(queueType);
-	queue.setRequiredPaymentCount(queueTypeVal.getRequiredPaymentCount());
-	return queue;
-    }
-
-    private Queue createQueueForInsert(final String queueType,
-	    final Account account) throws BusinessException {
-	final Queue queue = new Queue();
-	final QueueType queueTypeByName = queueTypeHolder
-		.getQueuTypeByName(queueType);
-	if (queueTypeByName == null) {
-	    throw new BusinessException("queue.invalidType");
-	}
-	queue.setAccount(account);
-	queue.setQueueType(queueType);
-	queue.setRequiredPaymentCount(queueTypeByName.getRequiredPaymentCount());
-	queue.setStatus(ActivationStatus.PENDING);
-	return queue;
+	return queueTypeVal;
     }
 
 }

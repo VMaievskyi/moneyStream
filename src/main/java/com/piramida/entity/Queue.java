@@ -79,7 +79,7 @@ public class Queue {
 	this.requiredPaymentCount = requiredPaymentCount;
     }
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "queue")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "queue")
     public Set<PendingQueue> getPendingQueues() {
 	return pendingQueues;
     }

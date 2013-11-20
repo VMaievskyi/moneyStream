@@ -3,12 +3,17 @@ package com.piramida.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.piramida.entity.Account;
+import com.piramida.entity.ActivationStatus;
+import com.piramida.entity.dto.AccountDto;
 import com.piramida.entity.dto.MessageDto;
+import com.piramida.facade.account.AccountFacade;
 import com.piramida.facade.queue.QueueFacade;
 
 @Controller
@@ -17,11 +22,8 @@ public class AdminController {
 
     @Autowired
     private QueueFacade queueFacade;
-
-    public void aproveQueueRequest(
-	    @RequestParam(required = true) final Integer queueId) {
-
-    }
+    @Autowired
+    private AccountFacade accountFacade;
 
     @Secured("ROLE_ADMIN")
     @RequestMapping(method = RequestMethod.DELETE)
@@ -51,6 +53,17 @@ public class AdminController {
 	    @RequestParam(required = true) final Integer accountId) {
 	queueFacade.putInQueue(queueType, accountId);
 	return new MessageDto("queue.cheat");
+    }
+
+    @Secured("ROLE_ADMIN")
+    @RequestMapping(method = RequestMethod.PUT, value = "/account")
+    @ResponseBody
+    public MessageDto createAdminAccount(@RequestBody final AccountDto account) {
+	final Account accountModel = accountFacade.createAccount(account);
+	accountModel.setStatus(ActivationStatus.ACTIVE);
+	accountModel.setRole("ROLE_ADMIN");
+	accountFacade.updateAccount(accountModel);
+	return new MessageDto("adminAccount.created");
     }
 
 }

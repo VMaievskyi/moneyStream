@@ -15,6 +15,7 @@ import com.piramida.entity.Account;
 import com.piramida.entity.ActivationStatus;
 import com.piramida.entity.PendingQueue;
 import com.piramida.entity.Queue;
+import com.piramida.entity.QueueType;
 import com.piramida.service.queue.QueueService;
 
 @Service
@@ -48,29 +49,30 @@ public class QueueServiceImpl implements QueueService {
 	return queueDao;
     }
 
-    // TODO: handle when no first result available
-    // TODO: Handle when first queue is filled with payment
     @Override
     @Transactional(isolation = Isolation.SERIALIZABLE)
-    public PendingQueue placeNewQueueRecord(final String queueType,
-	    final Account account, final Queue queueForInsert)
-	    throws BusinessException {
+    public void placeNewQueueRecord(final QueueType queueType,
+	    final Account account) throws BusinessException {
 
-	final Queue first = queueDao.getFirst(queueType);
-	if (first.getPendingQueues().size() < first.getRequiredPaymentCount()) {
-	    final PendingQueue pendingQueueRecord = createPendingQueueRecord(
-		    account, first);
-	    first.getPendingQueues().add(pendingQueueRecord);
-	    first.setStatus(ActivationStatus.PENDING);
-	    putInQueue(queueForInsert);
-	    linkPendingQueueWithNewQueue(pendingQueueRecord, queueForInsert);
-	    putInQueue(first);
+	final Queue firstRecord = createQueueForInsert(queueType, account);
+	firstRecord.setStatus(ActivationStatus.ACTIVE);
+	putInQueue(firstRecord);
 
-	    return pendingQueueRecord;
-	}
-	throw new BusinessException(
-		"get first method returns record filled with candidates");
+    }
 
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @Override
+    public PendingQueue placeRecordWithPaying(final QueueType queueType,
+	    final Account account, final Queue first) throws BusinessException {
+	PendingQueue pendingQueueRecord;
+	final Queue queueForInsert = createQueueForInsert(queueType, account);
+	pendingQueueRecord = createPendingQueueRecord(account, first);
+	first.getPendingQueues().add(pendingQueueRecord);
+	first.setStatus(ActivationStatus.PENDING);
+	putInQueue(queueForInsert);
+	linkPendingQueueWithNewQueue(pendingQueueRecord, queueForInsert);
+	putInQueue(first);
+	return pendingQueueRecord;
     }
 
     @Override
@@ -105,6 +107,19 @@ public class QueueServiceImpl implements QueueService {
 	queueDao.switchPositions(queue, secondRow);
     }
 
+    @Override
+    public Queue prepareQueueRecordForInsert(final QueueType queueTypeVal) {
+
+	if (queueTypeVal == null) {
+	    throw new IllegalArgumentException("Unknown queue type");
+	}
+
+	final Queue queue = createBlankQueue();
+	queue.setQueueType(queueTypeVal.getName());
+	queue.setRequiredPaymentCount(queueTypeVal.getRequiredPaymentCount());
+	return queue;
+    }
+
     private PendingQueue createPendingQueueRecord(final Account account,
 	    final Queue queue) {
 	final PendingQueue pendingQueue = new PendingQueue();
@@ -114,11 +129,29 @@ public class QueueServiceImpl implements QueueService {
 	return pendingQueue;
     }
 
+    protected Queue createBlankQueue() {
+	return new Queue();
+    }
+
     private void linkPendingQueueWithNewQueue(final PendingQueue queueRecord,
 	    final Queue queueForInsert) {
 
 	queueForInsert.setGarantedPendingQueue(queueRecord);
 	queueRecord.setGarantedQueue(queueForInsert);
+    }
+
+    @Override
+    public Queue createQueueForInsert(final QueueType queueType,
+	    final Account account) throws BusinessException {
+	final Queue queue = new Queue();
+	if (queueType == null) {
+	    throw new BusinessException("queue.invalidType");
+	}
+	queue.setAccount(account);
+	queue.setQueueType(queueType.getName());
+	queue.setRequiredPaymentCount(queueType.getRequiredPaymentCount());
+	queue.setStatus(ActivationStatus.PENDING);
+	return queue;
     }
 
 }

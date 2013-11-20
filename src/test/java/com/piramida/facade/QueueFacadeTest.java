@@ -29,10 +29,6 @@ public class QueueFacadeTest {
     @Spy
     private final QueueFacadeImpl testInstance = new QueueFacadeImpl() {
 
-	@Override
-	protected Queue createBlankQueue() {
-	    return queue;
-	}
     };
     @Mock
     private QueueService queueServiceMock;

@@ -20,6 +20,7 @@
 		<property name="requiredPaymentCount" value="2" />
 		<property name="sumToPay" value="500" />
 		<property name="VIPOnly" value="false" />
+		<property name="name" value="C500"/>
 	</bean>
 
 	<bean name="queueTypeHolder" class="com.piramida.entity.QueueTypeHolder">

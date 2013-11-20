@@ -36,7 +36,7 @@ public class AccountFacadeImpl implements AccountFacade {
     }
 
     @Override
-    public void createAccount(final AccountDto accountDto) {
+    public Account createAccount(final AccountDto accountDto) {
 	Validate.notNull(accountDto, "account cannot be null while creating");
 	Validate.notNull(accountDto.getEmail(), "email field is mandatory");
 	Validate.notNull(accountDto.getPassword(),
@@ -49,12 +49,18 @@ public class AccountFacadeImpl implements AccountFacade {
 	    final Account account = (Account) instance.map(accountDto);
 	    createValidetedAccount(account);
 	    mailService.sendEmail(EmailType.REGISTRATION, account);
+	    return account;
 	} else {
 	    throw new IllegalArgumentException("User with this email exists");
 	}
     }
 
     private void createValidetedAccount(final Account account) {
+	formValidatedUserAccount(account);
+	getAccountService().createUserAccount(account);
+    }
+
+    private void formValidatedUserAccount(final Account account) {
 	String activationString = getHashGeneratorService().generateValue(
 		account.getEmail());
 	activationString = makeUrlAppliable(activationString);
@@ -66,7 +72,6 @@ public class AccountFacadeImpl implements AccountFacade {
 	if (account.getStatus() == null) {
 	    account.setStatus(ActivationStatus.PENDING);
 	}
-	getAccountService().createUserAccount(account);
     }
 
     public void deactivateAccount(final Account account) {

@@ -2,6 +2,7 @@ package com.piramida.entity;
 
 public class QueueType {
 
+    private String name;
     private int sumToPay;
     private int requiredPaymentCount;
     private Boolean isVIPOnly;
@@ -37,6 +38,14 @@ public class QueueType {
 
     public void setNumberOfVisiblePositions(final int numberOfVisiblePositions) {
 	this.numberOfVisiblePositions = numberOfVisiblePositions;
+    }
+
+    public String getName() {
+	return name;
+    }
+
+    public void setName(final String name) {
+	this.name = name;
     }
 
 }
