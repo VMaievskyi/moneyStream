@@ -2,6 +2,7 @@ package com.piramida.service.queue.impl;
 
 import java.util.List;
 
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,8 +42,8 @@ public class QueueServiceImpl implements QueueService {
 
     @Override
     @Transactional(isolation = Isolation.SERIALIZABLE)
-    public Queue getFirst(final String queueType) {
-	return queueDao.getFirst(queueType);
+    public Queue getFirst(final QueueType queueType) {
+	return queueDao.getFirst(queueType.getName());
     }
 
     public QueueDao getQueueDao() {
@@ -126,6 +127,8 @@ public class QueueServiceImpl implements QueueService {
 	pendingQueue.setPendingQueueOwner(account);
 	pendingQueue.setStatus(ActivationStatus.PENDING);
 	pendingQueue.setQueue(queue);
+	pendingQueue.setSecureId(account.getEmail() + "_" + DateTime.now());
+	pendingQueue.setCreationDate(DateTime.now().toDate());
 	return pendingQueue;
     }
 

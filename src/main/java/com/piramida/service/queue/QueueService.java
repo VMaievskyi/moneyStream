@@ -14,7 +14,7 @@ public interface QueueService {
 
     void switchPositions(final Queue queue, final Queue secondRow);
 
-    Queue getFirst(String queueType);
+    Queue getFirst(QueueType queueType);
 
     void placeNewQueueRecord(QueueType queueType, Account account)
 	    throws BusinessException;

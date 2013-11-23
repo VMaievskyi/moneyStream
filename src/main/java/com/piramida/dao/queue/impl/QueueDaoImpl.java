@@ -7,6 +7,7 @@ import org.hibernate.Session;
 
 import com.piramida.dao.AbstractGenegicDao;
 import com.piramida.dao.queue.QueueDao;
+import com.piramida.entity.ActivationStatus;
 import com.piramida.entity.Queue;
 
 public class QueueDaoImpl extends AbstractGenegicDao<Queue> implements QueueDao {
@@ -42,8 +43,9 @@ public class QueueDaoImpl extends AbstractGenegicDao<Queue> implements QueueDao 
 		.createQuery(
 			"from "
 				+ getEntityName()
-				+ " as e where queueType=:queueType and e.pendingQueues.size < e.requiredPaymentCount");
+				+ " as e where queueType=:queueType and e.pendingQueues.size < e.requiredPaymentCount and status = :status");
 	oneRowQuery.setParameter("queueType", queueType);
+	oneRowQuery.setParameter("status", ActivationStatus.ACTIVE);
 	oneRowQuery.setMaxResults(ONE);
 	return (Queue) oneRowQuery.uniqueResult();
 

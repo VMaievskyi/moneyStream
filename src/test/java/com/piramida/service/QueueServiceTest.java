@@ -14,6 +14,7 @@ import com.piramida.controller.exception.BusinessException;
 import com.piramida.dao.queue.QueueDao;
 import com.piramida.entity.Account;
 import com.piramida.entity.Queue;
+import com.piramida.entity.QueueType;
 import com.piramida.service.queue.impl.QueueServiceImpl;
 
 public class QueueServiceTest {
@@ -21,10 +22,11 @@ public class QueueServiceTest {
     private static final int COUNT_TO_RETURN = 5;
     private static final int START_IDX = 1;
     private static final int ID = 2;
-    private static final int PAYMENT_COUNT = 0;
     private static final int REQUIRED_PAYMENT_COUNT = 2;
     @Mock
     private QueueDao queueDaoMock;
+    @Mock
+    private QueueType queueTypeMock;
     private Queue queue;
     private QueueServiceImpl testInstance;
 
@@ -56,6 +58,7 @@ public class QueueServiceTest {
     }
 
     @Ignore
+    // TODO: UPDATE THIS TEST
     @Test
     public void shouldIncreasePaymentCount() throws BusinessException {
 	initTestQueue();
@@ -79,7 +82,8 @@ public class QueueServiceTest {
 	initTestQueue();
 	Mockito.when(queueDaoMock.getFirst(queue.getQueueType())).thenReturn(
 		queue);
-	final Queue firstRow = testInstance.getFirst(queue.getQueueType());
+	Mockito.when(queueTypeMock.getName()).thenReturn(queue.getQueueType());
+	final Queue firstRow = testInstance.getFirst(queueTypeMock);
 	verify(queueDaoMock).getFirst(queue.getQueueType());
 	Assert.assertNotNull("Nothing were returned", firstRow);
     }

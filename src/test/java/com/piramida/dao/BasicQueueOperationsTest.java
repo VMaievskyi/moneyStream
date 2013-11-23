@@ -149,6 +149,7 @@ public class BasicQueueOperationsTest implements ApplicationContextAware {
 		.getRequiredPaymentCount().intValue());
     }
 
+    @Override
     public void setApplicationContext(
 	    final ApplicationContext applicationContext) throws BeansException {
 
@@ -159,6 +160,7 @@ public class BasicQueueOperationsTest implements ApplicationContextAware {
 	queue.setQueueType("C500");
 	queue.setRequiredPaymentCount(1);
 	queue.setAccount(createTestAccount());
+	queue.setStatus(ActivationStatus.ACTIVE);
 
     }
 

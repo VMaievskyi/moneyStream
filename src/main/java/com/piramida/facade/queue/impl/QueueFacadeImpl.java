@@ -2,7 +2,6 @@ package com.piramida.facade.queue.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.piramida.controller.exception.BusinessException;
@@ -39,15 +38,25 @@ public class QueueFacadeImpl implements QueueFacade {
     public void putInQueue(final String queueType) throws BusinessException {
 	final QueueType queueTypeVal = getQueueTypeByName(queueType);
 
-	final Account account = getCurrentAccount();
+	final Account account = accountService.getCurrentAccount();
 
-	final Queue first = queueService.getFirst(queueType);
-	if ((first != null) && checkIfQueueIspayedOff(first)) {
-	    final PendingQueue pendingQueue = queueService
-		    .placeRecordWithPaying(queueTypeVal, account, first);
-	    // TODO: GENERATE LINK
+	placeQueueRecord(queueTypeVal, account);
+    }
+
+    private void placeQueueRecord(final QueueType queueTypeVal,
+	    final Account account) throws BusinessException {
+	final Queue first = queueService.getFirst(queueTypeVal);
+	if ((first != null)) {
+	    if (checkIfQueueIspayedOff(first)) {
+		final PendingQueue pendingQueue = queueService
+			.placeRecordWithPaying(queueTypeVal, account, first);
+	    } else {
+		// TODO: Handle when first queue is filled with payment
+		first.setStatus(ActivationStatus.DELETE);
+		queueService.putInQueue(first);
+		placeQueueRecord(queueTypeVal, account);
+	    }
 	} else {
-	    // TODO: Handle when first queue is filled with payment
 	    queueService.placeNewQueueRecord(queueTypeVal, account);
 	}
     }
@@ -95,12 +104,6 @@ public class QueueFacadeImpl implements QueueFacade {
 	    getQueueService().switchPositions(byId1, byId2);
 	}
 
-    }
-
-    private Account getCurrentAccount() {
-	final Account account = (Account) SecurityContextHolder.getContext()
-		.getAuthentication().getPrincipal();
-	return account;
     }
 
     private QueueType getQueueTypeByName(final String queueType) {

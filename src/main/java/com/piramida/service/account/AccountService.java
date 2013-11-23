@@ -15,4 +15,6 @@ public interface AccountService {
     Account findByEmail(String email);
 
     Account findById(Integer accountId);
+
+    Account getCurrentAccount();
 }

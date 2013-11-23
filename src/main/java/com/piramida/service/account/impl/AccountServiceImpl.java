@@ -3,6 +3,7 @@ package com.piramida.service.account.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -79,6 +80,13 @@ public class AccountServiceImpl implements AccountService {
     @Transactional
     public Account findByEmail(final String email) {
 	return accountDao.findByEmail(email);
+    }
+
+    @Override
+    public Account getCurrentAccount() {
+	final Account account = (Account) SecurityContextHolder.getContext()
+		.getAuthentication().getPrincipal();
+	return account;
     }
 
     private void saveAccount(final Account account) {

@@ -34,6 +34,8 @@
 				<entry key="com.piramida.entity.dto.AccountDto" value-ref="accountDtoEntityMapper" />
 				<entry key="com.piramida.entity.dto.WalletDto" value-ref="walletDtoEntityMapper" />
 				<entry key="com.piramida.entity.dto.WalletDtoList" value-ref="walletDtoListEntityMapper" />
+				<entry key="com.piramida.entity.dto.PendingQueueDtoList" value-ref="pendingQueueListEntityMapper" />
+				<entry key="com.piramida.entity.dto.PendingQueueDto" value-ref="pendingQueueEntityMapper" />
 			</map>
 		</property>
 	</bean>

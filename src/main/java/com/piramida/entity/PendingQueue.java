@@ -23,6 +23,7 @@ public class PendingQueue {
     private ActivationStatus status;
     private Date creationDate;
     private Account pendingQueueOwner;
+    private String secureId;
     private Queue queue;
     private Queue garantedQueue;
 
@@ -67,7 +68,7 @@ public class PendingQueue {
 	this.pendingQueueOwner = pendingQueueOwner;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "Queue_id", referencedColumnName = "id", insertable = true)
     public Queue getQueue() {
 	return queue;
@@ -85,6 +86,15 @@ public class PendingQueue {
 
     public void setGarantedQueue(final Queue garantedQueue) {
 	this.garantedQueue = garantedQueue;
+    }
+
+    @Column(name = "secureId")
+    public String getSecureId() {
+	return secureId;
+    }
+
+    public void setSecureId(final String secureId) {
+	this.secureId = secureId;
     }
 
 }
