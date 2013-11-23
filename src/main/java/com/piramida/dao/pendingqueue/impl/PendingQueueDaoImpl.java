@@ -31,4 +31,14 @@ public class PendingQueueDaoImpl extends AbstractGenegicDao<PendingQueue>
 	return "PendingQueue";
     }
 
+    @Override
+    public PendingQueue getBySecureId(final String receiptId) {
+	final Query getById = getSessionFactory().getCurrentSession()
+		.createQuery(
+			"from " + getEntityName()
+				+ " where secureId=:securedId");
+	getById.setParameter("securedId", receiptId);
+	return (PendingQueue) getById.uniqueResult();
+    }
+
 }

@@ -11,4 +11,5 @@ public interface QueueFacade {
     void removeFromQueue(Integer id);
 
     void swapQueues(Integer id1, Integer id2);
+
 }

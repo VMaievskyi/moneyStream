@@ -127,7 +127,8 @@ public class QueueServiceImpl implements QueueService {
 	pendingQueue.setPendingQueueOwner(account);
 	pendingQueue.setStatus(ActivationStatus.PENDING);
 	pendingQueue.setQueue(queue);
-	pendingQueue.setSecureId(account.getEmail() + "_" + DateTime.now());
+	pendingQueue.setSecureId(account.getEmail() + "_"
+		+ DateTime.now().hashCode());
 	pendingQueue.setCreationDate(DateTime.now().toDate());
 	return pendingQueue;
     }

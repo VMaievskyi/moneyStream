@@ -6,7 +6,7 @@ import java.util.List;
 
 import com.piramida.service.ticket.TicketService;
 
-public class DefaultTicketService implements TicketService {
+public class TicketServiceImpl implements TicketService {
 
     private String ticketLocationFolder;
 

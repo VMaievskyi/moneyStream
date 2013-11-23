@@ -15,6 +15,7 @@ import com.piramida.entity.dto.AccountDto;
 import com.piramida.entity.dto.MessageDto;
 import com.piramida.facade.account.AccountFacade;
 import com.piramida.facade.queue.QueueFacade;
+import com.piramida.facade.ticket.TicketFacade;
 
 @Controller
 @RequestMapping("/admin")
@@ -24,6 +25,8 @@ public class AdminController {
     private QueueFacade queueFacade;
     @Autowired
     private AccountFacade accountFacade;
+    @Autowired
+    private TicketFacade ticketFacade;
 
     @Secured("ROLE_ADMIN")
     @RequestMapping(method = RequestMethod.DELETE)
@@ -66,4 +69,12 @@ public class AdminController {
 	return new MessageDto("adminAccount.created");
     }
 
+    @Secured("ROLE_ADMIN")
+    @RequestMapping(method = RequestMethod.POST, value = "/receiptStatus")
+    @ResponseBody
+    public MessageDto manageReceiptStatus(@RequestParam final String receiptId,
+	    @RequestParam final String receiptAction) {
+	ticketFacade.manageReceiptStatus(receiptId, receiptAction);
+	return new MessageDto("queue.ticket.status." + receiptAction);
+    }
 }

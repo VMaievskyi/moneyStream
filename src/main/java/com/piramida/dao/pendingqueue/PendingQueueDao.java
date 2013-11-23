@@ -9,4 +9,6 @@ public interface PendingQueueDao extends GenericDao<PendingQueue> {
 
     List<PendingQueue> getAllPending();
 
+    PendingQueue getBySecureId(String receiptId);
+
 }

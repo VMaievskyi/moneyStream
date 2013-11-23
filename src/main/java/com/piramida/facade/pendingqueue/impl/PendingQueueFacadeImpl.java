@@ -12,13 +12,13 @@ import com.piramida.entity.mapper.factory.MapperFactory;
 import com.piramida.entity.mapper.impl.AbstractDtoEntityMapper;
 import com.piramida.facade.pendingqueue.PendingQueueFacade;
 import com.piramida.service.account.AccountService;
-import com.piramida.service.pendingqueue.PendinQueueService;
+import com.piramida.service.pendingqueue.PendingQueueService;
 
 @Service("pendingQueueFacade")
 public class PendingQueueFacadeImpl implements PendingQueueFacade {
 
     @Autowired
-    private PendinQueueService pendingQueueService;
+    private PendingQueueService pendingQueueService;
     @Autowired
     private AccountService accountService;
     @Autowired
