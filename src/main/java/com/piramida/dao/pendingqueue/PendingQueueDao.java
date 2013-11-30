@@ -1,6 +1,6 @@
 package com.piramida.dao.pendingqueue;
 
-import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.List;
 
 import com.piramida.dao.GenericDao;
@@ -12,6 +12,6 @@ public interface PendingQueueDao extends GenericDao<PendingQueue> {
 
     PendingQueue getBySecureId(String receiptId);
 
-    List<PendingQueue> findInnactiveOlderThen(Timestamp valueOf);
+    List<PendingQueue> findInnactiveOlderThen(Calendar time);
 
 }

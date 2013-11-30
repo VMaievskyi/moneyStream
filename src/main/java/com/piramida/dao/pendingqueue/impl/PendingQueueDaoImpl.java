@@ -1,10 +1,9 @@
 package com.piramida.dao.pendingqueue.impl;
 
-import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.List;
 
 import org.hibernate.Query;
-import org.joda.time.DateTime;
 import org.springframework.stereotype.Repository;
 
 import com.google.common.collect.Lists;
@@ -44,17 +43,13 @@ public class PendingQueueDaoImpl extends AbstractGenegicDao<PendingQueue>
     }
 
     @Override
-    public List<PendingQueue> findInnactiveOlderThen(final Timestamp time) {
-	final Query getOldQuery = getSessionFactory()
-		.getCurrentSession()
-		.createQuery(
-			"from "
-				+ getEntityName()
-				+ " where (creationDate - :currentDate) < :range");
+    public List<PendingQueue> findInnactiveOlderThen(final Calendar time) {
+	final Query getOldQuery = getSessionFactory().getCurrentSession()
+		.createSQLQuery(
+			"select * from " + getEntityName()
+				+ " where creationDate < :currentDate");
 
-	getOldQuery.setTimestamp("currentDate", DateTime.now().toDate());
-	getOldQuery.setTimestamp("range", time);
-
+	getOldQuery.setDate("currentDate", time.getTime());
 	return getOldQuery.list();
     }
 }

@@ -13,8 +13,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+
+import org.hibernate.annotations.Type;
 
 @Entity
 public class PendingQueue {
@@ -48,14 +48,18 @@ public class PendingQueue {
 	this.status = status;
     }
 
-    @Column(name = "creationDate")
-    @Temporal(TemporalType.DATE)
+    @Column(name = "creationDate", columnDefinition = "DATETIME")
+    @Type(type = "timestamp")
     public Date getCreationDate() {
 	return creationDate;
     }
 
     public void setCreationDate(final Date creationDate) {
 	this.creationDate = creationDate;
+    }
+
+    public void setCreationDate(final long creationDate) {
+	this.creationDate = new Date(creationDate);
     }
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -1,6 +1,6 @@
 package com.piramida.cronjobs.queue;
 
-import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,13 +24,16 @@ public class LostPendingQueueCleaner {
     @Scheduled(cron = "0 0 0/2 * * ?")
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public void cleanLeavedPendingQueue() {
+	final Calendar cal = Calendar.getInstance();
+	cal.add(Calendar.HOUR_OF_DAY, -2);
+
 	final List<PendingQueue> oldQueues = pendingQueueDao
-		.findInnactiveOlderThen(Timestamp
-			.valueOf("0000-00-00 02:00:00"));
+		.findInnactiveOlderThen(cal);
 	for (final PendingQueue oldQueue : oldQueues) {
 	    final Queue garantedQueue = oldQueue.getGarantedQueue();
 	    queueDao.delete(garantedQueue);
 	}
 
     }
+
 }
