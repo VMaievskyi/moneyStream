@@ -61,6 +61,7 @@ public class PendingQueueDaoTest implements ApplicationContextAware {
 	final List<PendingQueue> actual = testInstance
 		.findInnactiveOlderThen(cal);
 	assertTrue("not 1 pending queue returns", actual.size() == 1);
+	System.out.println(actual.get(0) instanceof PendingQueue);
 	assertEquals("wrong pendingQueue returns",
 		pendingQueue.getCreationDate(), actual.get(0).getCreationDate());
     }

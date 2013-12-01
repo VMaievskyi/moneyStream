@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context"
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:jdbc="http://www.springframework.org/schema/jdbc" xmlns:jee="http://www.springframework.org/schema/jee"
 	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p"
 	xmlns:task="http://www.springframework.org/schema/task" xmlns:tx="http://www.springframework.org/schema/tx"
@@ -16,18 +17,27 @@
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
 
-<import resource="queueType.xml"/>
+	<import resource="queueType.xml" />
 
-	<context:property-placeholder  location="classpath:database.config,classpath:mail.config" />
+	<context:property-placeholder
+		location="classpath:database.config,classpath:mail.config" />
 	<context:component-scan base-package="com.piramida" />
 	<tx:annotation-driven transaction-manager="txManager" />
 	<mvc:annotation-driven />
-	<task:annotation-driven />
+	<task:annotation-driven scheduler="myScheduler" />
 
-	<bean name="abstractDtoEntityMapper" class="com.piramida.entity.mapper.impl.AbstractDtoEntityMapper" abstract="true" />
-	<bean name="accountDtoEntityMapper" class="com.piramida.entity.mapper.impl.AccountDtoEntityMapper" parent="abstractDtoEntityMapper" />
-	<bean name="walletDtoEntityMapper" class="com.piramida.entity.mapper.impl.WalletDtoEntityMapper" parent="abstractDtoEntityMapper" />
-	<bean name="walletDtoListEntityMapper" class="com.piramida.entity.mapper.impl.WalletDtoListEntityMapper" parent="abstractDtoEntityMapper"/>
+	<task:scheduler id="myScheduler" pool-size="10" />
+
+	<bean name="abstractDtoEntityMapper"
+		class="com.piramida.entity.mapper.impl.AbstractDtoEntityMapper"
+		abstract="true" />
+	<bean name="accountDtoEntityMapper"
+		class="com.piramida.entity.mapper.impl.AccountDtoEntityMapper" parent="abstractDtoEntityMapper" />
+	<bean name="walletDtoEntityMapper" class="com.piramida.entity.mapper.impl.WalletDtoEntityMapper"
+		parent="abstractDtoEntityMapper" />
+	<bean name="walletDtoListEntityMapper"
+		class="com.piramida.entity.mapper.impl.WalletDtoListEntityMapper"
+		parent="abstractDtoEntityMapper" />
 
 	<bean name="mappersRegistry" class="com.piramida.entity.mapper.factory.MappersRegistry">
 		<property name="registeregMaps">
@@ -35,16 +45,20 @@
 				<entry key="com.piramida.entity.dto.AccountDto" value-ref="accountDtoEntityMapper" />
 				<entry key="com.piramida.entity.dto.WalletDto" value-ref="walletDtoEntityMapper" />
 				<entry key="com.piramida.entity.dto.WalletDtoList" value-ref="walletDtoListEntityMapper" />
-				<entry key="com.piramida.entity.dto.PendingQueueDtoList" value-ref="pendingQueueListEntityMapper" />
-				<entry key="com.piramida.entity.dto.PendingQueueDto" value-ref="pendingQueueEntityMapper" />
+				<entry key="com.piramida.entity.dto.PendingQueueDtoList"
+					value-ref="pendingQueueListEntityMapper" />
+				<entry key="com.piramida.entity.dto.PendingQueueDto"
+					value-ref="pendingQueueEntityMapper" />
 			</map>
 		</property>
 	</bean>
 
-	<bean name="mapperFactory" class="com.piramida.entity.mapper.factory.impl.MapperFactoryImpl"></bean>
+	<bean name="mapperFactory"
+		class="com.piramida.entity.mapper.factory.impl.MapperFactoryImpl"></bean>
 
 
-	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
 		<property name="packagesToScan" value="com.piramida.entity" />
 		<property name="hibernateProperties">
@@ -63,14 +77,17 @@
 		<property name="password" value="${db.password}" />
 	</bean>
 
-	<bean id="txManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+	<bean id="txManager"
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
-	<bean id="jacksonMessageChanger" class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
+	<bean id="jacksonMessageChanger"
+		class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
 		<property name="supportedMediaTypes" value="application/json" />
 	</bean>
 
-	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+	<bean
+		class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
 		<property name="messageConverters">
 			<util:list id="beanList">
 				<ref bean="jacksonMessageChanger" />
@@ -78,18 +95,24 @@
 		</property>
 	</bean>
 
-	<bean name="persistenceExceptionTranslationPostProcessor" class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" />
+	<bean name="persistenceExceptionTranslationPostProcessor"
+		class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" />
 
 
 
 
-	<bean name="abstractDao" class="com.piramida.dao.AbstractGenegicDao" abstract="true" />
-	<bean name="accountDao" class="com.piramida.dao.account.impl.AccountDaoImpl" parent="abstractDao" />
-	<bean name="queueDao" class="com.piramida.dao.queue.impl.QueueDaoImpl" parent="abstractDao" />
+	<bean name="abstractDao" class="com.piramida.dao.AbstractGenegicDao"
+		abstract="true" />
+	<bean name="accountDao" class="com.piramida.dao.account.impl.AccountDaoImpl"
+		parent="abstractDao" />
+	<bean name="queueDao" class="com.piramida.dao.queue.impl.QueueDaoImpl"
+		parent="abstractDao" />
 
-	
-	<bean name="securityStringGenerator" class="com.piramida.service.security.impl.SecurityStringGeneratorService" />
-	<bean name="passwordGeneratorService" class="com.piramida.service.security.impl.PasswordGeneratorService" />
+
+	<bean name="securityStringGenerator"
+		class="com.piramida.service.security.impl.SecurityStringGeneratorService" />
+	<bean name="passwordGeneratorService"
+		class="com.piramida.service.security.impl.PasswordGeneratorService" />
 
 	<bean name="mailService" class="com.piramida.service.mail.impl.MailServiceImpl" />
 
@@ -112,15 +135,15 @@
 		<property name="port">
 			<value>${mail.port}</value>
 		</property>
-		<property name="protocol"  value="smtps"/>
+		<property name="protocol" value="smtps" />
 		<property name="javaMailProperties">
-            <props>
-                <prop key="mail.transport.protocol">smtp</prop>
-                <prop key="mail.smtp.auth">true</prop>
-                <prop key="mail.smtp.starttls.enable">true</prop>
-                <prop key="mail.debug">false</prop>
-            </props>
-        </property>
+			<props>
+				<prop key="mail.transport.protocol">smtp</prop>
+				<prop key="mail.smtp.auth">true</prop>
+				<prop key="mail.smtp.starttls.enable">true</prop>
+				<prop key="mail.debug">false</prop>
+			</props>
+		</property>
 	</bean>
 
 	<bean name="accountFacade" class="com.piramida.facade.account.impl.AccountFacadeImpl">
@@ -128,7 +151,7 @@
 		<property name="hashGeneratorService" ref="securityStringGenerator" />
 		<property name="mailService" ref="mailService" />
 	</bean>
-	
+
 
 
 </beans>

@@ -45,8 +45,8 @@ public class PendingQueueDaoImpl extends AbstractGenegicDao<PendingQueue>
     @Override
     public List<PendingQueue> findInnactiveOlderThen(final Calendar time) {
 	final Query getOldQuery = getSessionFactory().getCurrentSession()
-		.createSQLQuery(
-			"select * from " + getEntityName()
+		.createQuery(
+			"from " + getEntityName()
 				+ " where creationDate < :currentDate");
 
 	getOldQuery.setDate("currentDate", time.getTime());
