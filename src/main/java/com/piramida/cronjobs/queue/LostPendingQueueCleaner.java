@@ -27,7 +27,7 @@ public class LostPendingQueueCleaner {
     @Autowired
     private QueueDao queueDao;
 
-    @Scheduled(cron = "0 0 0/2 * * ?")
+    @Scheduled(cron = "${oldQueue.cron}")
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public void cleanLeavedPendingQueue() {
 	if (LOG.isInfoEnabled()) {
@@ -38,7 +38,6 @@ public class LostPendingQueueCleaner {
 
 	final List<PendingQueue> oldQueues = pendingQueueDao
 		.findInnactiveOlderThen(cal);
-	System.out.println(oldQueues);
 	if (oldQueues != null) {
 	    if (LOG.isInfoEnabled()) {
 		LOG.info("about to delete {} queues", oldQueues.size());
