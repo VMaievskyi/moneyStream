@@ -11,7 +11,7 @@ import com.piramida.entity.dto.PendingQueueDtoList;
 import com.piramida.facade.pendingqueue.PendingQueueFacade;
 
 @Controller
-@RequestMapping(value = "/pendingQueue")
+@RequestMapping(value = "/controller/pendingQueue")
 public class PendinqQueueController {
 
     @Autowired

@@ -14,7 +14,7 @@ import com.piramida.entity.dto.MessageDto;
 import com.piramida.facade.account.AccountFacade;
 
 @Controller
-@RequestMapping(value = "/account")
+@RequestMapping(value = "/controller/account")
 public class AccountController {
 
     @Autowired

@@ -18,7 +18,7 @@ import com.piramida.facade.queue.QueueFacade;
 import com.piramida.facade.ticket.TicketFacade;
 
 @Controller
-@RequestMapping("/admin")
+@RequestMapping("/controller/admin")
 public class AdminController {
 
     @Autowired

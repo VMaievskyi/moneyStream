@@ -14,7 +14,7 @@ import com.piramida.entity.dto.MessageDto;
 import com.piramida.facade.queue.QueueFacade;
 
 @Controller
-@RequestMapping("/queue")
+@RequestMapping("/controller/queue")
 public class QueueController {
 
     @Autowired

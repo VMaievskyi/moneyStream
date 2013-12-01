@@ -11,7 +11,7 @@ import com.piramida.controller.exception.AccountOperationException;
 import com.piramida.entity.dto.WalletDtoList;
 import com.piramida.facade.wallet.WalletFacade;
 
-@RequestMapping(value = "/wallets")
+@RequestMapping(value = "/controller/wallets")
 @Controller
 public class WalletController {
 
