@@ -6,18 +6,18 @@ import static org.mockito.Mockito.when;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import com.piramida.entity.Account;
-import com.piramida.entity.EmailType;
 import com.piramida.entity.dto.AccountDto;
 import com.piramida.entity.mapper.factory.MapperFactory;
 import com.piramida.entity.mapper.impl.AbstractDtoEntityMapper;
 import com.piramida.facade.account.impl.AccountFacadeImpl;
 import com.piramida.service.account.AccountService;
-import com.piramida.service.mail.MailService;
+import com.piramida.service.mail.impl.IMailSender;
 import com.piramida.service.security.HashGeneratorService;
 
 public class AccountFacadeTest {
@@ -25,29 +25,24 @@ public class AccountFacadeTest {
     private static final String PASSWORD = "password";
     private static final String EMAIL = "email";
     private static final String ACTIVATE_USER_STRING = "activateUserString";
-    private AccountFacadeImpl testInstance;
     @Mock
     private AccountService accountServiceMock;
     @Mock
     private HashGeneratorService hashGeneratorServiceMock;
     @Mock
-    private MailService mailServiceMock;
+    private IMailSender mailServiceMock;
     @Mock
     private MapperFactory mapperFactoryMock;
     @Mock
     private AbstractDtoEntityMapper mapperMock;
     private AccountDto accountDto;
     private Account account;
+    @InjectMocks
+    private final AccountFacadeImpl testInstance = new AccountFacadeImpl();
 
     @Before
     public void setUp() {
 	MockitoAnnotations.initMocks(this);
-	testInstance = new AccountFacadeImpl();
-	testInstance.setAccountService(accountServiceMock);
-	testInstance.setHashGeneratorService(hashGeneratorServiceMock);
-	testInstance.setMailService(mailServiceMock);
-	testInstance.setMapperFactory(mapperFactoryMock);
-
 	initAccount();
 
 	when(hashGeneratorServiceMock.generateValue(EMAIL)).thenReturn(
@@ -74,7 +69,7 @@ public class AccountFacadeTest {
 	testInstance.createAccount(accountDto);
 	verify(hashGeneratorServiceMock).generateValue(EMAIL);
 	verify(accountServiceMock).createUserAccount(account);
-	verify(mailServiceMock).sendEmail(EmailType.REGISTRATION, account);
+	verify(mailServiceMock).sendEmail(account);
 	Assert.assertNotNull("Activation string wasn't set",
 		account.getActivationString());
 

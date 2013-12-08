@@ -18,6 +18,7 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
 
 	<import resource="queueType.xml" />
+	<import resource="mvc-dispatcher-servlet.xml" />
 
 	<context:property-placeholder
 		location="classpath:database.config,classpath:mail.config,classpath:cron.config" />
@@ -114,13 +115,12 @@
 	<bean name="passwordGeneratorService"
 		class="com.piramida.service.security.impl.PasswordGeneratorService" />
 
-	<bean name="mailService" class="com.piramida.service.mail.impl.MailServiceImpl" />
 
-	<bean id="templateMessage" class="org.springframework.mail.SimpleMailMessage">
-		<property name="from">
-			<value>${mail.from}</value>
-		</property>
+
+	<bean name="accountOperationInformer"
+		class="com.piramida.service.mail.impl.AccountOperationMailSender">
 	</bean>
+
 
 	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
 		<property name="host">
@@ -141,7 +141,7 @@
 				<prop key="mail.transport.protocol">smtp</prop>
 				<prop key="mail.smtp.auth">true</prop>
 				<prop key="mail.smtp.starttls.enable">true</prop>
-				<prop key="mail.debug">false</prop>
+				<prop key="mail.debug">true</prop>
 			</props>
 		</property>
 	</bean>
@@ -149,9 +149,6 @@
 	<bean name="accountFacade" class="com.piramida.facade.account.impl.AccountFacadeImpl">
 		<property name="accountService" ref="accountService" />
 		<property name="hashGeneratorService" ref="securityStringGenerator" />
-		<property name="mailService" ref="mailService" />
 	</bean>
-
-
 
 </beans>

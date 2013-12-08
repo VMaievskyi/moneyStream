@@ -6,14 +6,13 @@ import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.piramida.entity.Account;
 import com.piramida.entity.ActivationStatus;
-import com.piramida.entity.EmailType;
 import com.piramida.entity.UserRoles;
 import com.piramida.entity.dto.AccountDto;
 import com.piramida.entity.mapper.factory.MapperFactory;
 import com.piramida.entity.mapper.impl.AbstractDtoEntityMapper;
 import com.piramida.facade.account.AccountFacade;
 import com.piramida.service.account.AccountService;
-import com.piramida.service.mail.MailService;
+import com.piramida.service.mail.impl.IMailSender;
 import com.piramida.service.security.HashGeneratorService;
 
 public class AccountFacadeImpl implements AccountFacade {
@@ -24,10 +23,10 @@ public class AccountFacadeImpl implements AccountFacade {
     @Qualifier(value = "securityStringGenerator")
     private HashGeneratorService hashGeneratorService;
     @Autowired
-    private MailService mailService;
-    @Autowired
     @Qualifier("mapperFactory")
     private MapperFactory mapperFactory;
+    @Autowired
+    private IMailSender accountOperationInformer;
 
     @Override
     public void activateAccount(final String string) {
@@ -48,7 +47,7 @@ public class AccountFacadeImpl implements AccountFacade {
 
 	    final Account account = (Account) instance.map(accountDto);
 	    createValidetedAccount(account);
-	    mailService.sendEmail(EmailType.REGISTRATION, account);
+	    accountOperationInformer.sendEmail(account);
 	    return account;
 	} else {
 	    throw new IllegalArgumentException("User with this email exists");
@@ -87,10 +86,6 @@ public class AccountFacadeImpl implements AccountFacade {
 	return hashGeneratorService;
     }
 
-    public MailService getMailService() {
-	return mailService;
-    }
-
     public MapperFactory getMapperFactory() {
 	return mapperFactory;
     }
@@ -107,10 +102,6 @@ public class AccountFacadeImpl implements AccountFacade {
     public void setHashGeneratorService(
 	    final HashGeneratorService hashGeneratorService) {
 	this.hashGeneratorService = hashGeneratorService;
-    }
-
-    public void setMailService(final MailService mailService) {
-	this.mailService = mailService;
     }
 
     public void setMapperFactory(final MapperFactory mapperFactory) {

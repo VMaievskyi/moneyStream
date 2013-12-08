@@ -7,7 +7,7 @@
                     http://www.springframework.org/schema/security/spring-security-3.1.xsd">
 
 	<http pattern="/css/**" security="none" />
-	<http pattern="/account/**" security="none" />
+	<http pattern="/controller/account/**" security="none" />
 
 	<http auto-config="true" >
 		<intercept-url pattern="/admin/**" access="ROLE_ADMIN" />
