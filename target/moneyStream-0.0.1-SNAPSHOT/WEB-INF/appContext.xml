@@ -117,10 +117,6 @@
 
 
 
-	<bean name="accountOperationInformer"
-		class="com.piramida.service.mail.impl.AccountOperationMailSender">
-	</bean>
-
 
 	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
 		<property name="host">

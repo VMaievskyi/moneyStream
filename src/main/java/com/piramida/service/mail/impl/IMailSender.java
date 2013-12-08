@@ -1,9 +1,11 @@
 package com.piramida.service.mail.impl;
 
-import com.piramida.entity.Account;
+import javax.mail.MessagingException;
+
+import com.piramida.entity.Email;
 
 public interface IMailSender {
 
-    void sendEmail(final Account account);
+    void sendEmail(final Email email) throws MessagingException;
 
 }

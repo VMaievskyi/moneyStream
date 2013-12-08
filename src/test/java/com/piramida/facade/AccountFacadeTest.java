@@ -17,7 +17,7 @@ import com.piramida.entity.mapper.factory.MapperFactory;
 import com.piramida.entity.mapper.impl.AbstractDtoEntityMapper;
 import com.piramida.facade.account.impl.AccountFacadeImpl;
 import com.piramida.service.account.AccountService;
-import com.piramida.service.mail.impl.IMailSender;
+import com.piramida.service.mail.persister.IPersister;
 import com.piramida.service.security.HashGeneratorService;
 
 public class AccountFacadeTest {
@@ -30,7 +30,7 @@ public class AccountFacadeTest {
     @Mock
     private HashGeneratorService hashGeneratorServiceMock;
     @Mock
-    private IMailSender mailServiceMock;
+    private IPersister persister;
     @Mock
     private MapperFactory mapperFactoryMock;
     @Mock
@@ -69,7 +69,9 @@ public class AccountFacadeTest {
 	testInstance.createAccount(accountDto);
 	verify(hashGeneratorServiceMock).generateValue(EMAIL);
 	verify(accountServiceMock).createUserAccount(account);
-	verify(mailServiceMock).sendEmail(account);
+
+	verify(persister).persistMail(account);
+
 	Assert.assertNotNull("Activation string wasn't set",
 		account.getActivationString());
 

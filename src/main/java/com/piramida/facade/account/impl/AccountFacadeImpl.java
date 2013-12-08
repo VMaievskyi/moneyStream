@@ -12,7 +12,7 @@ import com.piramida.entity.mapper.factory.MapperFactory;
 import com.piramida.entity.mapper.impl.AbstractDtoEntityMapper;
 import com.piramida.facade.account.AccountFacade;
 import com.piramida.service.account.AccountService;
-import com.piramida.service.mail.impl.IMailSender;
+import com.piramida.service.mail.persister.IPersister;
 import com.piramida.service.security.HashGeneratorService;
 
 public class AccountFacadeImpl implements AccountFacade {
@@ -26,7 +26,8 @@ public class AccountFacadeImpl implements AccountFacade {
     @Qualifier("mapperFactory")
     private MapperFactory mapperFactory;
     @Autowired
-    private IMailSender accountOperationInformer;
+    @Qualifier("accountMailPersister")
+    private IPersister persister;
 
     @Override
     public void activateAccount(final String string) {
@@ -47,7 +48,7 @@ public class AccountFacadeImpl implements AccountFacade {
 
 	    final Account account = (Account) instance.map(accountDto);
 	    createValidetedAccount(account);
-	    accountOperationInformer.sendEmail(account);
+	    persister.persistMail(account);
 	    return account;
 	} else {
 	    throw new IllegalArgumentException("User with this email exists");
