@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring3.SpringTemplateEngine;
 
@@ -26,6 +28,7 @@ public class AccountMailPersister implements IPersister {
     private SpringTemplateEngine templateEngine;
 
     @Override
+    @Transactional(isolation = Isolation.DEFAULT)
     public void persistMail(final Account account) {
 
 	final String htmlContent = formText(account);

@@ -11,6 +11,7 @@
 
 	<http auto-config="true" >
 		<intercept-url pattern="/admin/**" access="ROLE_ADMIN" />
+		<intercept-url pattern="/controller/account/**" access="" />
 		<intercept-url pattern="/controller/**" access="ROLE_USER, ROLE_ADMIN" />
 		<security:http-basic />
 	</http>

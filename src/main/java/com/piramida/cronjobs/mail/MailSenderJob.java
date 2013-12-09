@@ -8,8 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.piramida.dao.email.EmailDao;
 import com.piramida.entity.Email;
@@ -24,16 +25,20 @@ public class MailSenderJob {
     private EmailDao emailDao;
     @Value("${mail.maxRetryCount}")
     private Integer maxRetryCount;
-
+    @Autowired
     private IMailSender mailSender;
 
-    @Scheduled(cron = "${sendEmail.cron}")
+    @Transactional(isolation = Isolation.DEFAULT)
     public void sendEmails() {
+	doSendEmails();
+
+    }
+
+    private void doSendEmails() {
 	final List<Email> allEmails = emailDao.findAll();
 	if (allEmails != null) {
 	    sendAllEmail(allEmails);
 	}
-
     }
 
     private void sendAllEmail(final List<Email> allEmails) {
