@@ -1,9 +1,12 @@
 package com.piramida.facade.queue.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import com.google.common.collect.Lists;
 import com.piramida.controller.exception.BusinessException;
 import com.piramida.entity.Account;
 import com.piramida.entity.ActivationStatus;
@@ -110,6 +113,16 @@ public class QueueFacadeImpl implements QueueFacade {
 	final QueueType queueTypeVal = getQueueTypeHolder().getQueuTypeByName(
 		queueType);
 	return queueTypeVal;
+    }
+
+    @Override
+    public List<QueueType> getAllQueueTypes() {
+	final List<QueueType> queueTypes = Lists.newArrayList();
+	for (final String name : getQueueTypeHolder().getAllQueueTypeNames()) {
+	    queueTypes.add(getQueueTypeByName(name));
+	}
+
+	return queueTypes;
     }
 
 }

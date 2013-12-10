@@ -9,13 +9,16 @@
 
 	<http pattern="/css/**" security="none" />
 	<http pattern="/controller/account/**" security="none" />
+	<http pattern="/" security="none" />
+	<http pattern="/queues" security="none" /> <!-- TEMP!!! -->
+	<http pattern="/system/**" security="none" />
 
 	<http auto-config="true">
 		<intercept-url pattern="/admin/**" access="ROLE_ADMIN" />
-		<intercept-url pattern="/controller/account/**" access="" />
 		<intercept-url pattern="/controller/**" access="ROLE_USER, ROLE_ADMIN" />
-		<form-login login-page="/login"
-			authentication-failure-url="/login-error" />
+		<intercept-url pattern="/**" access="ROLE_USER" />
+		<form-login login-page="/system/login"
+			authentication-failure-url="/system/login-error" />
 		<logout />
 	</http>
 
