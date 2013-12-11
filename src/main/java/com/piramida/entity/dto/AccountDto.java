@@ -3,6 +3,7 @@ package com.piramida.entity.dto;
 import java.io.Serializable;
 import java.util.List;
 
+import com.google.common.collect.Lists;
 import com.piramida.entity.ActivationStatus;
 
 public class AccountDto implements Serializable {
@@ -13,7 +14,8 @@ public class AccountDto implements Serializable {
     private ActivationStatus status;
     private String activationString;
     private List<Integer> queuesIds;
-    private List<WalletDto> wallets;
+    private List<WalletDto> wallets = Lists.newArrayList(new WalletDto(),
+	    new WalletDto());
 
     public Integer getId() {
 	return id;

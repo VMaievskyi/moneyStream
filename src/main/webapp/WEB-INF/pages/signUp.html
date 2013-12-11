@@ -15,14 +15,17 @@
 		 <input type="text"  th:field="*{email}" /> 
 		 <label for="password">Password </label> 
 		 <input	type="password" th:field="*{password}" /> 
+		 <br/>
 		<label for="wallets">wallets</label>
-		<input type="text" th:field="*{wallets[0].waletNumber}" /> 
-		<input id="qiwi" type="hidden" th:value="*{wallets[0].walletType}" value="qiwi" />
-
-		<script>
-			$("#qiwi").val("qiwi");
-		</script>
-
+		<table>
+			<tr th:each="wallet,walletStat: *{wallets}">
+				<td th:text="${walletStat.count}"></td>
+				<td>
+					<input type="text" th:value="*{wallets[__${walletStat.index}__].walletType}" value="qiwi" />
+					<input type="text" th:field="*{wallets[__${walletStat.index}__].waletNumber}" /> 
+				</td>
+			</tr>
+		</table>
 		<button type="submit" name="create" th:text="create">create
 			account</button>
 	</form>
