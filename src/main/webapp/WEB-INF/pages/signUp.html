@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Thymeleaf tutorial: exercise 6</title>
+<link rel="stylesheet" href="../../../css/main-static.css"
+	th:href="@{/css/main.css}" />
+<meta charset="utf-8" />
+	<script th:fragment="jquery" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+</head>
+<body>
+
+	<form action="#" th:action="@{/account/new}" th:object="${account}"
+		method="post">
+		<label for="email">email </label>
+		 <input type="text"  th:field="*{email}" /> 
+		 <label for="password">Password </label> 
+		 <input	type="password" th:field="*{password}" /> 
+		<label for="wallets">wallets</label>
+		<input type="text" th:field="*{wallets[0].waletNumber}" /> 
+		<input id="qiwi" type="hidden" th:value="*{wallets[0].walletType}" value="qiwi" />
+
+		<script>
+			$("#qiwi").val("qiwi");
+		</script>
+
+		<button type="submit" name="create" th:text="create">create
+			account</button>
+	</form>
+</body>
+</html>

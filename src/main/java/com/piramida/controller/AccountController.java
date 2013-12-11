@@ -2,8 +2,9 @@ package com.piramida.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -14,7 +15,7 @@ import com.piramida.entity.dto.MessageDto;
 import com.piramida.facade.account.AccountFacade;
 
 @Controller
-@RequestMapping(value = "/controller/account")
+@RequestMapping(value = "/account")
 public class AccountController {
 
     @Autowired
@@ -31,13 +32,22 @@ public class AccountController {
 
     @RequestMapping(value = "/new", method = RequestMethod.POST)
     @ResponseBody
-    public void createAccount(@RequestBody final AccountDto account)
+    public void createAccount(
+	    @ModelAttribute("account") final AccountDto account)
 	    throws AccountOperationException {
 	if (account.getId() == null) {
 	    accountFacade.createAccount(account);
 	} else {
 	    throw new AccountOperationException("forbidden to update account");
 	}
+    }
+
+    @RequestMapping(value = "/signUp", method = RequestMethod.GET)
+    public String signUp(final Model model) {
+
+	model.addAttribute("account", new AccountDto());
+
+	return "signUp";
     }
 
     public AccountFacade getAccountFacade() {

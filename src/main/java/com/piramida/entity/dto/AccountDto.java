@@ -6,6 +6,7 @@ import java.util.List;
 import com.piramida.entity.ActivationStatus;
 
 public class AccountDto implements Serializable {
+
     private Integer id;
     private String email;
     private String password;
