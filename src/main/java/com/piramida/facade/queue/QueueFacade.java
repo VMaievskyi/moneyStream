@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.piramida.controller.exception.BusinessException;
 import com.piramida.entity.QueueType;
+import com.piramida.entity.dto.QueueInfoDto;
 
 public interface QueueFacade {
 
@@ -16,5 +17,7 @@ public interface QueueFacade {
     void swapQueues(Integer id1, Integer id2);
 
     List<QueueType> getAllQueueTypes();
+
+    QueueInfoDto getInfoForQueueType(QueueType currentQueue);
 
 }

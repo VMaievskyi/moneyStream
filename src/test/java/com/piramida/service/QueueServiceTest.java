@@ -45,11 +45,12 @@ public class QueueServiceTest {
 	verify(queueDaoMock).save(queue);
     }
 
-    @Test
-    public void shouldFindAllWithRange() {
-	testInstance.findAllRange(START_IDX, COUNT_TO_RETURN);
-	verify(queueDaoMock).findAllRange(START_IDX, COUNT_TO_RETURN);
-    }
+    // @Ignore
+    // @Test
+    // public void shouldFindAllWithRange() {
+    // testInstance.findAllRange(START_IDX, COUNT_TO_RETURN);
+    // verify(queueDaoMock).findAllRange(START_IDX, COUNT_TO_RETURN);
+    // }
 
     @Test
     public void shouldFindById() {

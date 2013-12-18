@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.piramida.controller.exception.BusinessException;
 import com.piramida.entity.QueueType;
 import com.piramida.entity.dto.MessageDto;
+import com.piramida.entity.dto.QueueInfoDto;
 import com.piramida.facade.queue.QueueFacade;
 
 @Controller
@@ -41,10 +43,19 @@ public class QueueController {
 	return queueFacade.getAllQueueTypes();
     }
 
+    @Secured(value = "ROLE_USER")
     @RequestMapping(method = RequestMethod.GET)
     public String showQueues(final Model model) {
 	model.addAttribute("queues", queueFacade.getAllQueueTypes());
 	return "allQueues";
+    }
+
+    @Secured(value = "ROLE_USER")
+    @RequestMapping(value = "/infoForQueue", method = RequestMethod.GET)
+    public QueueInfoDto getQueueInfo(
+	    @ModelAttribute final QueueType currentQueue) {
+	return queueFacade.getInfoForQueueType(currentQueue);
+
     }
 
 }

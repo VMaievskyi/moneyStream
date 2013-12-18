@@ -14,6 +14,10 @@ import com.piramida.entity.PendingQueue;
 import com.piramida.entity.Queue;
 import com.piramida.entity.QueueType;
 import com.piramida.entity.QueueTypeHolder;
+import com.piramida.entity.dto.QueueDto;
+import com.piramida.entity.dto.QueueInfoDto;
+import com.piramida.entity.mapper.factory.MapperFactory;
+import com.piramida.entity.mapper.impl.AbstractDtoEntityMapper;
 import com.piramida.facade.queue.QueueFacade;
 import com.piramida.service.account.AccountService;
 import com.piramida.service.queue.QueueService;
@@ -28,6 +32,8 @@ public class QueueFacadeImpl implements QueueFacade {
     private QueueTypeHolder queueTypeHolder;
     @Autowired
     private AccountService accountService;
+    @Autowired
+    private MapperFactory mapperFactory;
 
     public QueueService getQueueService() {
 	return queueService;
@@ -123,6 +129,28 @@ public class QueueFacadeImpl implements QueueFacade {
 	}
 
 	return queueTypes;
+    }
+
+    @Override
+    public QueueInfoDto getInfoForQueueType(final QueueType currentQueue) {
+	final QueueInfoDto infoDto = new QueueInfoDto();
+	infoDto.setQueue(currentQueue);
+	final int numberOfVisiblePositions = currentQueue
+		.getNumberOfVisiblePositions();
+	if (numberOfVisiblePositions != 0) {
+	    final AbstractDtoEntityMapper mapper = mapperFactory
+		    .createInstance(QueueDto.class);
+	    final List<Queue> visibleRows = queueService.findAllRange(
+		    currentQueue, 0, numberOfVisiblePositions);
+	    if (visibleRows != null) {
+		final List<QueueDto> dtos = Lists.newLinkedList();
+		for (final Queue queue : visibleRows) {
+		    dtos.add((QueueDto) mapper.unmap(queue));
+		}
+		infoDto.setQueueDtos(dtos);
+	    }
+	}
+	return infoDto;
     }
 
 }

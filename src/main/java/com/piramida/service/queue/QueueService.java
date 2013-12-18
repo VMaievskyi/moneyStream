@@ -1,5 +1,7 @@
 package com.piramida.service.queue;
 
+import java.util.List;
+
 import com.piramida.controller.exception.BusinessException;
 import com.piramida.entity.Account;
 import com.piramida.entity.PendingQueue;
@@ -28,5 +30,8 @@ public interface QueueService {
 
     PendingQueue placeRecordWithPaying(final QueueType queueType,
 	    final Account account, final Queue first) throws BusinessException;
+
+    List<Queue> findAllRange(QueueType queueType, final int istartIndex,
+	    final int countToReturn);
 
 }

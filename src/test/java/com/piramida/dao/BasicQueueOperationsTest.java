@@ -142,7 +142,8 @@ public class BasicQueueOperationsTest implements ApplicationContextAware {
 	    queue.setRequiredPaymentCount(i);
 	    queueDao.save(queue);
 	}
-	final List<Queue> result = queueDao.findAllRange(2, 4);
+	final List<Queue> result = queueDao.findAllRange(queue.getQueueType(),
+		2, 4);
 	assertEquals("Wrong count of elements was returned", 6, result.size());
 
 	assertEquals("wrong record from table was returned", 2, result.get(0)

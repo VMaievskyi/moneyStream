@@ -13,7 +13,8 @@ public interface QueueDao extends GenericDao<Queue> {
 
     Queue findById(Integer id);
 
-    List<Queue> findAllRange(int istartIndex, int countToReturn);
+    List<Queue> findAllRange(String queueType, int istartIndex,
+	    int countToReturn);
 
     void refresh(Queue queue);
 

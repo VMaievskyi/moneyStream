@@ -52,6 +52,7 @@
 	<bean name="walletDtoListEntityMapper"
 		class="com.piramida.entity.mapper.impl.WalletDtoListEntityMapper"
 		parent="abstractDtoEntityMapper" />
+	<bean name="queueDtoEntityMapper" class="com.piramida.entity.mapper.impl.QueueDtoEntityMapper" parent="abstractDtoEntityMapper"/>
 
 	<bean name="mappersRegistry" class="com.piramida.entity.mapper.factory.MappersRegistry">
 		<property name="registeregMaps">
@@ -63,6 +64,7 @@
 					value-ref="pendingQueueListEntityMapper" />
 				<entry key="com.piramida.entity.dto.PendingQueueDto"
 					value-ref="pendingQueueEntityMapper" />
+				<entry key="com.piramida.entity.dto.QueueDto" value-ref="queueDtoEntityMapper"/>
 			</map>
 		</property>
 	</bean>

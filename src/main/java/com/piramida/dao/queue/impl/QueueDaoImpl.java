@@ -61,13 +61,16 @@ public class QueueDaoImpl extends AbstractGenegicDao<Queue> implements QueueDao 
     }
 
     @Override
-    public List<Queue> findAllRange(final int istartIndex,
-	    final int countToReturn) {
+    public List<Queue> findAllRange(final String queueType,
+	    final int istartIndex, final int countToReturn) {
 	final Session currentSession = getSessionFactory().getCurrentSession();
 	final Query rangedSearch = currentSession
-		.createQuery("from " + getEntityName())
+		.createQuery(
+			"from " + getEntityName()
+				+ " where queueType=:queueType")
 		.setFirstResult(istartIndex)
 		.setMaxResults(countToReturn + istartIndex);
+	rangedSearch.setString("queueType", queueType);
 	return rangedSearch.list();
     }
 

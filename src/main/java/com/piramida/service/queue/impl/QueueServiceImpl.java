@@ -27,10 +27,12 @@ public class QueueServiceImpl implements QueueService {
     @Autowired
     private QueueDao queueDao;
 
+    @Override
     @Transactional
-    public List<Queue> findAllRange(final int istartIndex,
-	    final int countToReturn) {
-	return getQueueDao().findAllRange(istartIndex, countToReturn);
+    public List<Queue> findAllRange(final QueueType queueType,
+	    final int istartIndex, final int countToReturn) {
+	return getQueueDao().findAllRange(queueType.getName(), istartIndex,
+		countToReturn);
 
     }
 
