@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Thymeleaf tutorial: exercise 6</title>
+<link rel="stylesheet" href="../../../css/main-static.css"
+	th:href="@{/css/main.css}" />
+<meta charset="utf-8" />
+	<script th:fragment="jquery" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+</head>
+<body>
+	<label  th:text="${queueInfo.queue.name}"></label>
+	<label  th:text="${queueInfo.queue.sumToPay}"></label>
+</body>
+</html>

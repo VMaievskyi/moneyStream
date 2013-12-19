@@ -18,6 +18,6 @@ public interface QueueFacade {
 
     List<QueueType> getAllQueueTypes();
 
-    QueueInfoDto getInfoForQueueType(QueueType currentQueue);
+    QueueInfoDto getInfoForQueueType(String currentQueue);
 
 }

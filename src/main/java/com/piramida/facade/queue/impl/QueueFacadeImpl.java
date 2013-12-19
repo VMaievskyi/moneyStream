@@ -132,16 +132,19 @@ public class QueueFacadeImpl implements QueueFacade {
     }
 
     @Override
-    public QueueInfoDto getInfoForQueueType(final QueueType currentQueue) {
+    public QueueInfoDto getInfoForQueueType(final String currentQueue) {
+	final QueueType queuTypeByName = queueTypeHolder
+		.getQueuTypeByName(currentQueue);
 	final QueueInfoDto infoDto = new QueueInfoDto();
-	infoDto.setQueue(currentQueue);
-	final int numberOfVisiblePositions = currentQueue
+
+	infoDto.setQueue(queuTypeByName);
+	final int numberOfVisiblePositions = queuTypeByName
 		.getNumberOfVisiblePositions();
 	if (numberOfVisiblePositions != 0) {
 	    final AbstractDtoEntityMapper mapper = mapperFactory
 		    .createInstance(QueueDto.class);
 	    final List<Queue> visibleRows = queueService.findAllRange(
-		    currentQueue, 0, numberOfVisiblePositions);
+		    queuTypeByName, 0, numberOfVisiblePositions);
 	    if (visibleRows != null) {
 		final List<QueueDto> dtos = Lists.newLinkedList();
 		for (final Queue queue : visibleRows) {
