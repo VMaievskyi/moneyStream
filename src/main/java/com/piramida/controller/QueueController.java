@@ -27,7 +27,7 @@ public class QueueController {
     private QueueFacade queueFacade;
 
     @Secured(value = "ROLE_USER")
-    @RequestMapping(method = RequestMethod.PUT, value = "/{queueType}")
+    @RequestMapping(method = RequestMethod.POST, value = "/{queueType}")
     @ResponseBody
     public MessageDto putInQueue(@PathVariable final String queueType)
 	    throws BusinessException {

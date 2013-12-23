@@ -10,5 +10,9 @@
 <body>
 	<label  th:text="${queueInfo.queue.name}"></label>
 	<label  th:text="${queueInfo.queue.sumToPay}"></label>
+	<form action="#" th:action="@{/queue/}+${queueInfo.queue.name}" 
+		method="post">
+		<button type="submit"> Choose queue </button>
+	</form>
 </body>
 </html>
