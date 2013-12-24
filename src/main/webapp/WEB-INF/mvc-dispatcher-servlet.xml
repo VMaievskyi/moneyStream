@@ -11,6 +11,7 @@
 	<!-- SPRING ANNOTATION PROCESSING -->
 	<!-- **************************************************************** -->
 	<context:component-scan base-package="thymeleafexamples.stsm" />
+	<mvc:resources mapping="/js/**" location="/WEB-INF/js/" />
 
 
 	<!-- **************************************************************** -->
