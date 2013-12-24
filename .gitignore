@@ -6,6 +6,5 @@
 *.ear
 .idea*
 target/*
-/target
-/target
+/target/*
 /target

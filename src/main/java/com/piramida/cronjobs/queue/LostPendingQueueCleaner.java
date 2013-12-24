@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.piramida.dao.pendingqueue.PendingQueueDao;
 import com.piramida.dao.queue.QueueDao;
+import com.piramida.entity.ActivationStatus;
 import com.piramida.entity.PendingQueue;
 import com.piramida.entity.Queue;
 
@@ -47,6 +48,19 @@ public class LostPendingQueueCleaner {
 	    }
 	}
 
+    }
+
+    public void cleanPayedQueues() {
+	if (LOG.isInfoEnabled()) {
+	    LOG.info("about to run scheduled job: delete payed queues");
+	}
+
+	final Integer removedRows = queueDao
+		.deleteQueueWithStatus(ActivationStatus.DELETE);
+
+	if (LOG.isInfoEnabled()) {
+	    LOG.info("job done: removed {}", removedRows);
+	}
     }
 
 }

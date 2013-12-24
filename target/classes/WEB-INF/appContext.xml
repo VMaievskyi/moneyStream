@@ -38,6 +38,8 @@
 	<task:scheduled-tasks>
 		<task:scheduled ref="lostPendingQueueCleaner" method="cleanLeavedPendingQueue"
 			cron="${oldQueue.cron}" />
+		<task:scheduled ref="lostPendingQueueCleaner" method="cleanPayedQueues"
+			cron="${payedQueue.cron}" />
 		<task:scheduled ref="mailSenderJob" method="sendEmails"
 			cron="${sendEmail.cron}" />
 	</task:scheduled-tasks>

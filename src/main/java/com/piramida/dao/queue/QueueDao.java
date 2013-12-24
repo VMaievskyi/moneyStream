@@ -3,6 +3,7 @@ package com.piramida.dao.queue;
 import java.util.List;
 
 import com.piramida.dao.GenericDao;
+import com.piramida.entity.ActivationStatus;
 import com.piramida.entity.Queue;
 
 public interface QueueDao extends GenericDao<Queue> {
@@ -17,5 +18,7 @@ public interface QueueDao extends GenericDao<Queue> {
 	    int countToReturn);
 
     void refresh(Queue queue);
+
+    Integer deleteQueueWithStatus(ActivationStatus status);
 
 }
