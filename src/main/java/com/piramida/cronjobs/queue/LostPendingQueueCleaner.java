@@ -50,6 +50,7 @@ public class LostPendingQueueCleaner {
 
     }
 
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public void cleanPayedQueues() {
 	if (LOG.isInfoEnabled()) {
 	    LOG.info("about to run scheduled job: delete payed queues");
