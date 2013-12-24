@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Thymeleaf tutorial: exercise 6</title>
+<link rel="stylesheet" href="../../../css/main-static.css"
+	th:href="@{/css/main.css}" />
+<meta charset="utf-8" />
+<script th:fragment="jquery"
+	src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+</head>
+<body>
+	<div th:if="${wallets!=null}">
+		<label for="wallets">send money to one of this wallets</label>
+		<table>
+			<tr th:each="wallet,walletStat: *{wallets}">
+				<td th:text="${walletStat.count}"></td>
+				<td th:text="${wallet.walletType}"></td>
+				<td th:text="${wallet.waletNumber}"></td>
+			</tr>
+		</table>
+		<form action=""></form>
+	</div>
+
+	<label>if you want to see all unclosed queues click here</label>
+	<form action="#" method="get" th:action="@{/queue/unclosed}">
+		<button type="submit">Click</button>
+	</form>
+</body>
+</html>

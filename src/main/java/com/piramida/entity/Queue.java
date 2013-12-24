@@ -51,7 +51,7 @@ public class Queue {
 	this.position = position;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "Account_id", referencedColumnName = "id", insertable = true)
     public Account getAccount() {
 	return account;

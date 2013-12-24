@@ -3,12 +3,13 @@ package com.piramida.facade.queue;
 import java.util.List;
 
 import com.piramida.controller.exception.BusinessException;
+import com.piramida.entity.Queue;
 import com.piramida.entity.QueueType;
 import com.piramida.entity.dto.QueueInfoDto;
 
 public interface QueueFacade {
 
-    void putInQueue(final String queueType) throws BusinessException;
+    Queue putInQueue(final String queueType) throws BusinessException;
 
     void putInQueue(String queueType, final Integer accountId);
 

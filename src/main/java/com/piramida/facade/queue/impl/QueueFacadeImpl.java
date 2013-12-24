@@ -44,30 +44,32 @@ public class QueueFacadeImpl implements QueueFacade {
     }
 
     @Override
-    public void putInQueue(final String queueType) throws BusinessException {
+    public Queue putInQueue(final String queueType) throws BusinessException {
 	final QueueType queueTypeVal = getQueueTypeByName(queueType);
 
 	final Account account = accountService.getCurrentAccount();
 
-	placeQueueRecord(queueTypeVal, account);
+	return placeQueueRecord(queueTypeVal, account);
     }
 
-    private void placeQueueRecord(final QueueType queueTypeVal,
+    private Queue placeQueueRecord(final QueueType queueTypeVal,
 	    final Account account) throws BusinessException {
-	final Queue first = queueService.getFirst(queueTypeVal);
+	Queue first = queueService.getFirst(queueTypeVal);
 	if ((first != null)) {
 	    if (checkIfQueueIspayedOff(first)) {
 		final PendingQueue pendingQueue = queueService
 			.placeRecordWithPaying(queueTypeVal, account, first);
 	    } else {
-		// TODO: Handle when first queue is filled with payment
 		first.setStatus(ActivationStatus.DELETE);
 		queueService.putInQueue(first);
-		placeQueueRecord(queueTypeVal, account);
+		first = placeQueueRecord(queueTypeVal, account);
 	    }
 	} else {
 	    queueService.placeNewQueueRecord(queueTypeVal, account);
+	    first = null;
 	}
+	return first;
+
     }
 
     private boolean checkIfQueueIspayedOff(final Queue first) {

@@ -91,7 +91,7 @@ public class Account implements UserDetails {
 	this.queues = queues;
     }
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "owner", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "owner", cascade = CascadeType.ALL)
     public Set<Wallet> getWallets() {
 	return wallets;
     }

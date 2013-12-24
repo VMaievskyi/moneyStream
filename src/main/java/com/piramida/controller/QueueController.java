@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.piramida.controller.exception.BusinessException;
+import com.piramida.entity.Queue;
 import com.piramida.entity.QueueType;
-import com.piramida.entity.dto.MessageDto;
 import com.piramida.facade.queue.QueueFacade;
 
 @Controller
@@ -28,11 +28,13 @@ public class QueueController {
 
     @Secured(value = "ROLE_USER")
     @RequestMapping(method = RequestMethod.POST, value = "/{queueType}")
-    @ResponseBody
-    public MessageDto putInQueue(@PathVariable final String queueType)
-	    throws BusinessException {
-	queueFacade.putInQueue(queueType);
-	return new MessageDto("queue.put.in");
+    public String putInQueue(final Model model,
+	    @PathVariable final String queueType) throws BusinessException {
+	final Queue queue = queueFacade.putInQueue(queueType);
+	if (queue != null) {
+	    model.addAttribute("wallets", queue.getAccount().getWallets());
+	}
+	return "walletsPage";
     }
 
     @Secured(value = "ROLE_USER")
