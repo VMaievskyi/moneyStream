@@ -78,7 +78,7 @@ public class QueueDaoImpl extends AbstractGenegicDao<Queue> implements QueueDao 
     public Integer deleteQueueWithStatus(final ActivationStatus status) {
 	final Session currentSession = getSessionFactory().getCurrentSession();
 	final Query deleteQuery = currentSession
-		.createQuery("delete * from :entity where status=:status");
+		.createQuery("delete  from :entity where status=:status");
 	deleteQuery.setString("entity", getEntityName());
 	deleteQuery.setString("status", status.toString());
 	return deleteQuery.executeUpdate();
