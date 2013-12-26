@@ -7,27 +7,41 @@
 <meta charset="utf-8" />
 	<script th:fragment="jquery" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
 </head>
-<body>
-		<p th:if="${accountError}">This email is used</p>
+<body >
+	<div th:include="fragments/header :: header_text"></div>
+	
+		<div th:if="${accountError}" class="error">
+			<p>This email is used</p>
+		</div>
 	<form action="#" th:action="@{/account/new}" th:object="${account}"
 		method="post">
+		
+		<ul th:if="${#fields.hasErrors('*')}">
+			<div class="error">
+  				<li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
+  			</div>
+		</ul>
+		
 		<label for="email">email </label>
-		 <input type="text"  th:field="*{email}" /> 
-		 <label for="password">Password </label> 
-		 <input	type="password" th:field="*{password}" /> 
-		 <br/>
+		<input type="text" th:field="*{email}" id="email" th:errorclass="error"/> 
+		
+		<label for="password">Password </label> 
+		<input	type="password" th:field="*{password}" id="password" th:errorclass="error"/> 
+		<br/>
+		 
 		<label for="wallets">wallets</label>
-		<table>
-			<tr th:each="wallet,walletStat: *{wallets}">
+		<table id="wallets">
+			<tr th:each="wallet,walletStat: *{wallets}" >
 				<td th:text="${walletStat.count}"></td>
 				<td>
 					<input type="text" th:value="*{wallets[__${walletStat.index}__].walletType}" value="qiwi" />
-					<input type="text" th:field="*{wallets[__${walletStat.index}__].waletNumber}" /> 
+					<input type="text" th:field="*{wallets[__${walletStat.index}__].waletNumber}" th:errorclass="error"/> 
 				</td>
 			</tr>
 		</table>
 		<button type="submit" name="create" th:text="create">create
 			account</button>
 	</form>
+	<div th:include="fragments/footer :: footer_text"></div>
 </body>
 </html>

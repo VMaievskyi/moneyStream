@@ -9,25 +9,29 @@
 <body>
 
 	<h1>AllQueues</h1>
-	<table>
-		<thead>
-			<tr>
-				<th>Name</th>
-				<th>Price</th>
-				<th>Available from</th>
-			</tr>
-		</thead>
-		<tbody th:remove="all-but-first">
-			<tr th:each="currentQueue : ${queues}">
-				<form action="#" th:action="@{/queue/infoForQueue}"
-					th:object="${currentQueue}" >
-					<td><label th:text="*{sumToPay}" />
-					<input type="hidden" name="currentQueue" th:value="*{name}"/>
-					 <input
-						type="submit" value="submit" /></td>
-				</form>
-			</tr>
-		</tbody>
-	</table>
+	<div th:if="${exception}!=null" class="error">
+		<p>Unknown queue</p>
+	</div>
+	<div th:if="${exception}==null">
+		<table>
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Price</th>
+					<th>Available from</th>
+				</tr>
+			</thead>
+			<tbody th:remove="all-but-first" >
+				<tr th:each="currentQueue : ${queues}">
+					<form action="#" th:action="@{/queue/infoForQueue}"
+						th:object="${currentQueue}">
+						<td><label th:text="*{sumToPay}" /> <input type="hidden"
+							name="currentQueue" th:value="*{name}" /> <input type="submit"
+							value="submit" /></td>
+					</form>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 </body>
 </html>
